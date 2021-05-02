@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RestSharp" Version="106.11.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UCPortal.DatabaseEntities\UCPortal.DatabaseEntities.csproj" />
+    <ProjectReference Include="..\UCPortal.DTO\UCPortal.DTO.csproj" />
+    <ProjectReference Include="..\UCPortal.EmailHandler\UCPortal.EmailHandler.csproj" />
+    <ProjectReference Include="..\UCPortal.RequestResponse\UCPortal.RequestResponse.csproj" />
+  </ItemGroup>
+
+</Project>

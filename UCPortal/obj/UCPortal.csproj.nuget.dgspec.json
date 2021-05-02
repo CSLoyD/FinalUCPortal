@@ -1,0 +1,448 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\FinalCapstone\\ucportal\\UCPortal\\UCPortal.csproj": {}
+  },
+  "projects": {
+    "D:\\FinalCapstone\\ucportal\\UCPortal.BusinessLogic\\UCPortal.BusinessLogic.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FinalCapstone\\ucportal\\UCPortal.BusinessLogic\\UCPortal.BusinessLogic.csproj",
+        "projectName": "UCPortal.BusinessLogic",
+        "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.BusinessLogic\\UCPortal.BusinessLogic.csproj",
+        "packagesPath": "C:\\Users\\Publio.Admin-PC\\.nuget\\packages\\",
+        "outputPath": "D:\\FinalCapstone\\ucportal\\UCPortal.BusinessLogic\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Publio.Admin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\FinalCapstone\\ucportal\\UCPortal.DatabaseEntities\\UCPortal.DatabaseEntities.csproj": {
+                "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.DatabaseEntities\\UCPortal.DatabaseEntities.csproj"
+              },
+              "D:\\FinalCapstone\\ucportal\\UCPortal.DTO\\UCPortal.DTO.csproj": {
+                "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.DTO\\UCPortal.DTO.csproj"
+              },
+              "D:\\FinalCapstone\\ucportal\\UCPortal.EmailHandler\\UCPortal.EmailHandler.csproj": {
+                "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.EmailHandler\\UCPortal.EmailHandler.csproj"
+              },
+              "D:\\FinalCapstone\\ucportal\\UCPortal.RequestResponse\\UCPortal.RequestResponse.csproj": {
+                "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.RequestResponse\\UCPortal.RequestResponse.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "RestSharp": {
+              "target": "Package",
+              "version": "[106.11.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FinalCapstone\\ucportal\\UCPortal.DatabaseEntities\\UCPortal.DatabaseEntities.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FinalCapstone\\ucportal\\UCPortal.DatabaseEntities\\UCPortal.DatabaseEntities.csproj",
+        "projectName": "UCPortal.DatabaseEntities",
+        "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.DatabaseEntities\\UCPortal.DatabaseEntities.csproj",
+        "packagesPath": "C:\\Users\\Publio.Admin-PC\\.nuget\\packages\\",
+        "outputPath": "D:\\FinalCapstone\\ucportal\\UCPortal.DatabaseEntities\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Publio.Admin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FinalCapstone\\ucportal\\UCPortal.DTO\\UCPortal.DTO.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FinalCapstone\\ucportal\\UCPortal.DTO\\UCPortal.DTO.csproj",
+        "projectName": "UCPortal.DTO",
+        "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.DTO\\UCPortal.DTO.csproj",
+        "packagesPath": "C:\\Users\\Publio.Admin-PC\\.nuget\\packages\\",
+        "outputPath": "D:\\FinalCapstone\\ucportal\\UCPortal.DTO\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Publio.Admin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FinalCapstone\\ucportal\\UCPortal.EmailHandler\\UCPortal.EmailHandler.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FinalCapstone\\ucportal\\UCPortal.EmailHandler\\UCPortal.EmailHandler.csproj",
+        "projectName": "UCPortal.EmailHandler",
+        "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.EmailHandler\\UCPortal.EmailHandler.csproj",
+        "packagesPath": "C:\\Users\\Publio.Admin-PC\\.nuget\\packages\\",
+        "outputPath": "D:\\FinalCapstone\\ucportal\\UCPortal.EmailHandler\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Publio.Admin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[2.10.0, )"
+            },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[2.10.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FinalCapstone\\ucportal\\UCPortal.RequestResponse\\UCPortal.RequestResponse.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FinalCapstone\\ucportal\\UCPortal.RequestResponse\\UCPortal.RequestResponse.csproj",
+        "projectName": "UCPortal.RequestResponse",
+        "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.RequestResponse\\UCPortal.RequestResponse.csproj",
+        "packagesPath": "C:\\Users\\Publio.Admin-PC\\.nuget\\packages\\",
+        "outputPath": "D:\\FinalCapstone\\ucportal\\UCPortal.RequestResponse\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Publio.Admin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FinalCapstone\\ucportal\\UCPortal\\UCPortal.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FinalCapstone\\ucportal\\UCPortal\\UCPortal.csproj",
+        "projectName": "UCPortal",
+        "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal\\UCPortal.csproj",
+        "packagesPath": "C:\\Users\\Publio.Admin-PC\\.nuget\\packages\\",
+        "outputPath": "D:\\FinalCapstone\\ucportal\\UCPortal\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Publio.Admin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\FinalCapstone\\ucportal\\UCPortal.BusinessLogic\\UCPortal.BusinessLogic.csproj": {
+                "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.BusinessLogic\\UCPortal.BusinessLogic.csproj"
+              },
+              "D:\\FinalCapstone\\ucportal\\UCPortal.DatabaseEntities\\UCPortal.DatabaseEntities.csproj": {
+                "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.DatabaseEntities\\UCPortal.DatabaseEntities.csproj"
+              },
+              "D:\\FinalCapstone\\ucportal\\UCPortal.RequestResponse\\UCPortal.RequestResponse.csproj": {
+                "projectPath": "D:\\FinalCapstone\\ucportal\\UCPortal.RequestResponse\\UCPortal.RequestResponse.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.6.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
