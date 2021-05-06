@@ -21,6 +21,7 @@ namespace UCPortal.DTO.Response
             public string m_time_end { get; set; }
             public int status { get; set; }
             public string internal_code { get; set; }
+            public int size { get; set; }
         }
         public class FilteredSubject
         {

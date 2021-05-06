@@ -10,5 +10,6 @@ namespace UCPortal.DatabaseEntities.Models
         public int StudRequestId { get; set; }
         public string StudId { get; set; }
         public string InternalCode { get; set; }
+        public string Term { get; set; }
     }
 }

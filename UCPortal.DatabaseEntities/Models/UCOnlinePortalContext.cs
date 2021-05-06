@@ -1382,6 +1382,11 @@ namespace UCPortal.DatabaseEntities.Models
                     .IsUnicode(false)
                     .HasColumnName("days");
 
+                entity.Property(e => e.EdpCode)
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .HasColumnName("edp_code");
+
                 entity.Property(e => e.InternalCode)
                     .HasMaxLength(10)
                     .IsUnicode(false)
@@ -1422,6 +1427,11 @@ namespace UCPortal.DatabaseEntities.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("subject_name");
+
+                entity.Property(e => e.Term)
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .HasColumnName("term");
 
                 entity.Property(e => e.TimeEnd)
                     .HasMaxLength(50)
@@ -1953,6 +1963,11 @@ namespace UCPortal.DatabaseEntities.Models
                     .HasMaxLength(8)
                     .IsUnicode(false)
                     .HasColumnName("stud_id");
+
+                entity.Property(e => e.Term)
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .HasColumnName("term");
             });
 
             modelBuilder.Entity<SubjectInfo>(entity =>

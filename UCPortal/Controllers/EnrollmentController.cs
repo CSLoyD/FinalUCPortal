@@ -2237,46 +2237,7 @@ namespace UCPortal.Controllers
             //await result from function ChangePassword
             var result = await Task.FromResult(_enrollmentManagement.ViewStudentEvaluation(converted_req));
 
-            //convert DTO to response
-
-            /*List<ViewStudentDeanEvaluationResponse.Student> final = new List<ViewStudentDeanEvaluationResponse.Student>();
-
-            foreach (DTO.Response.ViewStudentDeanEvaluationResponse.Student stud in result.students.ToList())
-            {
-                String dateF = String.Empty;
-
-                if (stud.status.ToString().Equals("0") || stud.status.ToString().Equals("1") || stud.status.ToString().Equals("2") || stud.status.ToString().Equals("3") || stud.status.ToString().Equals("4") || stud.status.ToString().Equals("5"))
-                {
-                    dateF = stud.registered_on.Value.ToString("yyyy/MM/dd HH:mm:ss");
-                }
-                else
-                {
-                    dateF = stud.enrollmentDate.Value.ToString("yyyy/MM/dd HH:mm:ss");
-                }
-
-                ViewStudentDeanEvaluationResponse.Student newStudent = new ViewStudentDeanEvaluationResponse.Student
-                {
-                    classification = stud.classification,
-                    course_code = stud.course_code,
-                    course_year = stud.course_year,
-                    firstname = stud.firstname,
-                    lastname = stud.lastname,
-                    id_number = stud.id_number,
-                    status = stud.status,
-                    suffix = stud.suffix,
-                    mi = stud.mi,
-                    date = dateF,
-                    request_deblock = stud.request_deblock,
-                    request_overload = stud.request_overload,
-                    has_payment = stud.has_payment,
-                    profile = stud.profile,
-                    needed_payment = stud.needed_payment.ToString(),
-                    has_promissory = stud.has_promissory,
-                    promi_pay = stud.promi_pay
-                };
-
-                final.Add(newStudent);
-            }*/
+           
             var student = result.students.Select(x =>
             {
                 var rSched = Newtonsoft.Json.JsonConvert.SerializeObject(x);
@@ -2285,6 +2246,57 @@ namespace UCPortal.Controllers
             }).ToList();
 
             return Ok(new ViewStudentDeanEvaluationResponse { students = student, count = result.count });
+        }
+
+
+        [HttpPost]
+        [Route("student/request/all")]
+        public async Task<IActionResult> GetStudentReuqestList([FromBody] GetStudentListRequest request)
+        {
+            //Check if required fields are present
+            if (!ModelState.IsValid)
+            {
+                return Ok(new GetStudentListResponse { students = null });
+            }
+
+            //Convert response object to DTO Objectscourses
+            var serialized_req = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            var converted_req = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.Request.GetStudentListRequest>(serialized_req);
+
+            //await result from function ChangePassword
+            var result = await Task.FromResult(_enrollmentManagement.GetStudentList(converted_req));
+
+
+            var student = result.students.Select(x =>
+            {
+                var rSched = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+                var cSched = Newtonsoft.Json.JsonConvert.DeserializeObject<GetStudentListResponse.Students>(rSched);
+                return cSched;
+            }).ToList();
+
+            return Ok(new GetStudentListResponse { students = student,});
+        }
+
+        [HttpPost]
+        [Route("student/request/updatestatus")]
+        public async Task<IActionResult> UpdateRequestStatus([FromBody] UpdateRequestScheduleStatusRequest request)
+        {
+            //Check if required fields are present
+            if (!ModelState.IsValid)
+            {
+                return Ok(new UpdateRequestScheduleStatusResponse { success = 0 });
+            }
+
+            //Convert response object to DTO Objectscourses
+            var serialized_req = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            var converted_req = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.Request.UpdateRequestScheduleStatusRequest>(serialized_req);
+
+            //await result from function ChangePassword
+            var result = await Task.FromResult(_enrollmentManagement.UpdateRequestStatus(converted_req));
+
+
+
+            return Ok(new UpdateRequestScheduleStatusResponse { success = result.success });
         }
     }
 }

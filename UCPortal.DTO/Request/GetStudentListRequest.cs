@@ -4,10 +4,9 @@ using System.Text;
 
 namespace UCPortal.DTO.Request
 {
-    public class CancelSubjectReqRequest
+    public class GetStudentListRequest
     {
-        public string id_number { get; set; }
         public string internal_code { get; set; }
-        public string term { get; set; }
+        public string term { get; set;}
     }
 }

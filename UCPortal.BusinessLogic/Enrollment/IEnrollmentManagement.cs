@@ -103,5 +103,7 @@ namespace UCPortal.BusinessLogic.Enrollment
         RemoveEquivalenceResponse RemoveEquivalence(RemoveEquivalenceRequest removeEquivalenceRequest);
         GetSubjectEquivalenceResponse GetSubjectEquivalence(GetSubjectEquivalenceRequest equivalenceRequest);
         ViewStudentDeanEvaluationResponse ViewStudentEvaluation(ViewStudentDeanEvaluationRequest viewStudentDeanEvaluationRequest);
+        GetStudentListResponse GetStudentList(GetStudentListRequest getRequest);
+        UpdateRequestScheduleStatusResponse UpdateRequestStatus(UpdateRequestScheduleStatusRequest getRequest);
     }
 }

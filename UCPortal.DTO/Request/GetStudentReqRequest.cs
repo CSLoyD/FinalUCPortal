@@ -7,5 +7,6 @@ namespace UCPortal.DTO.Request
     public class GetStudentReqRequest
     {
         public string id_number { get; set; }
+        public string term { get; set; }
     }
 }

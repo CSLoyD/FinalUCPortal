@@ -8,5 +8,6 @@ namespace UCPortal.DTO.Request
     {
         public string id_number { get; set; }
         public string internal_code { get; set; }
+        public string term { get; set; }
     }
 }

@@ -179,7 +179,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     Units = 0,
                     Classification = registrationRequest.student_info.classification,
                     Dept = registrationRequest.student_info.dept,
-                    Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN: (short)EnrollmentStatus.REGISTERED,
+                    Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED,
                     AdjustmentCount = 1,
                     RequestDeblock = 0,
                     RequestOverload = 0,
@@ -209,7 +209,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     newStudentOenrp.ApprovedRegRegistrarOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
                     newStudentOenrp.Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED;
                 }
-                
+
 
                 //Insert new record to loginInfo but with No Id Numbers first
                 LoginInfo newLogin = new LoginInfo
@@ -359,12 +359,12 @@ namespace UCPortal.BusinessLogic.Enrollment
                     schedules = _ucOnlinePortalContext.Schedules.Where(x => ostsp.Contains(x.EdpCode) && x.Size == x.MaxSize && saveEnrollRequest.active_term == saveEnrollRequest.active_term).ToList();
                     schedulesBe = _ucOnlinePortalContext.SchedulesBes.Where(x => ostsp.Contains(x.EdpCode) && x.Size == x.MaxSize && saveEnrollRequest.active_term == saveEnrollRequest.active_term).ToList();
 
-                    if ( ( schedules.Count > 0 || schedulesBe.Count > 0 ) && saveEnrollRequest.accept_section != 1)
+                    if ((schedules.Count > 0 || schedulesBe.Count > 0) && saveEnrollRequest.accept_section != 1)
                     {
                         isFull = true;
                     }
                     else
-                    {                      
+                    {
                         //Insert OSTSP if section is set by dean
                         var schedulesOstp = _ucOnlinePortalContext.Ostsps.Where(x => x.StudId == saveEnrollRequest.id_number && x.Status != 2 && x.ActiveTerm == saveEnrollRequest.active_term).ToList();
 
@@ -407,14 +407,14 @@ namespace UCPortal.BusinessLogic.Enrollment
                         schedulesOstp.ToList().ForEach(x => x.Status = 1);
                         schedulesOstp.ToList().ForEach(x => x.AdjustedOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")));
 
-                         newNotif = new Notification
+                        newNotif = new Notification
                         {
                             StudId = saveEnrollRequest.id_number,
                             NotifRead = 0,
                             Dte = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                             Message = Literals.APPROVED_BY_DEAN,
                             ActiveTerm = saveEnrollRequest.active_term
-                         };
+                        };
 
                         _ucOnlinePortalContext.Notifications.Add(newNotif);
                         _ucOnlinePortalContext.SaveChanges();
@@ -521,7 +521,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             {
                 hasError = true;
             }
-            
+
             if (hasError)
             {
                 return new SaveEnrollmentResponse { success = 0 };
@@ -562,7 +562,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             {
                 colleges = _ucOnlinePortalContext.CourseLists.Where(x => (x.Department == getCollegeRequest.department && x.CourseActive == 1 && x.ActiveTerm == getCollegeRequest.active_term)).ToList();
             }
-            else if(!getCollegeRequest.course_department.Equals(String.Empty) || !getCollegeRequest.department_abbr.Equals(String.Empty))
+            else if (!getCollegeRequest.course_department.Equals(String.Empty) || !getCollegeRequest.department_abbr.Equals(String.Empty))
             {
                 colleges = _ucOnlinePortalContext.CourseLists.Where(x => (x.CourseDepartment == getCollegeRequest.course_department || x.CourseDepartmentAbbr == getCollegeRequest.department_abbr) && x.CourseActive == 1 && x.ActiveTerm == getCollegeRequest.active_term).ToList();
             }
@@ -734,11 +734,11 @@ namespace UCPortal.BusinessLogic.Enrollment
                     }
                     else if (viewScheduleRequest.course_code.Contains("MM") || viewScheduleRequest.course_code.Contains("MV"))
                     {
-                        result = result.Where(x => (x.course_code.Contains("MM") || x.course_code.Contains("MV") ) && x.subject_name.StartsWith("NSTP") || x.subject_name.StartsWith("P.E"));
+                        result = result.Where(x => (x.course_code.Contains("MM") || x.course_code.Contains("MV")) && x.subject_name.StartsWith("NSTP") || x.subject_name.StartsWith("P.E"));
                     }
                     else
                     {
-                        result = result.Where(x => !courseCodeArray.Contains(x.course_code) && ( x.subject_name.StartsWith("NSTP") || x.subject_name.StartsWith("PE")));
+                        result = result.Where(x => !courseCodeArray.Contains(x.course_code) && (x.subject_name.StartsWith("NSTP") || x.subject_name.StartsWith("PE")));
                     }
                 }
                 else if (viewScheduleRequest.no_nstp > 0)
@@ -747,15 +747,15 @@ namespace UCPortal.BusinessLogic.Enrollment
                     {
                         result = result.Where(x => x.course_code == viewScheduleRequest.course_code && x.subject_name.StartsWith("NSTP"));
                     }
-                    else if(viewScheduleRequest.course_code.Contains("MT"))
+                    else if (viewScheduleRequest.course_code.Contains("MT"))
                     {
                         result = result.Where(x => x.course_code == viewScheduleRequest.course_code && x.subject_name.StartsWith("NSTP"));
                     }
-                    else if(viewScheduleRequest.course_code.Contains("CC"))
+                    else if (viewScheduleRequest.course_code.Contains("CC"))
                     {
                         result = result.Where(x => x.course_code == viewScheduleRequest.course_code && x.subject_name.StartsWith("NSTP"));
                     }
-                    else if(viewScheduleRequest.course_code.Contains("BN"))
+                    else if (viewScheduleRequest.course_code.Contains("BN"))
                     {
                         result = result.Where(x => x.course_code == viewScheduleRequest.course_code && x.subject_name.StartsWith("NSTP"));
                     }
@@ -767,7 +767,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     {
                         result = result.Where(x => x.course_code == viewScheduleRequest.course_code && x.subject_name.StartsWith("NSTP"));
                     }
-                    else if(viewScheduleRequest.course_code.Contains("MM") || viewScheduleRequest.course_code.Contains("MV"))
+                    else if (viewScheduleRequest.course_code.Contains("MM") || viewScheduleRequest.course_code.Contains("MV"))
                     {
                         result = result.Where(x => (x.course_code.Contains("MM") || x.course_code.Contains("MV")) && x.subject_name.StartsWith("NSTP"));
                     }
@@ -786,7 +786,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     {
                         result = result.Where(x => x.course_code == viewScheduleRequest.course_code && x.subject_name.StartsWith("PE"));
                     }
-                    else if(viewScheduleRequest.course_code.Contains("CC"))
+                    else if (viewScheduleRequest.course_code.Contains("CC"))
                     {
                         result = result.Where(x => x.course_code == viewScheduleRequest.course_code && x.subject_name.StartsWith("DEFTACT"));
                     }
@@ -803,7 +803,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     {
                         result = result.Where(x => x.course_code == viewScheduleRequest.course_code && x.subject_name.StartsWith("P.E"));
                     }
-                    else if(viewScheduleRequest.course_code.Contains("MM") || viewScheduleRequest.course_code.Contains("MV"))
+                    else if (viewScheduleRequest.course_code.Contains("MM") || viewScheduleRequest.course_code.Contains("MV"))
                     {
                         result = result.Where(x => (x.course_code.Contains("MM") || x.course_code.Contains("MV")) && x.subject_name.StartsWith("P.E"));
                     }
@@ -940,7 +940,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 result = result.OrderBy(x => x.section).ThenBy(x => x.course_code).ThenBy(x => x.edpcode).Skip(skip).Take(take);
             }
 
-            return new ViewScheduleResponse { schedules = result.ToList(), count = count};
+            return new ViewScheduleResponse { schedules = result.ToList(), count = count };
         }
 
         /*
@@ -1089,7 +1089,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                     //return studyload response
                     return new GetStudyLoadResponse { schedules = result, has_pe = 1, has_nstp = 1 };
-                }                
+                }
             }
         }
 
@@ -1211,7 +1211,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             int hasAdjustment = 0;
 
             var openAdjustment = _ucOnlinePortalContext.CourseLists.Where(x => x.CourseCode == loginInfo.CourseCode && x.AdjustmentStart <= DateTime.Now.Date && x.AdjustmentEnd >= DateTime.Now.Date && x.ActiveTerm == getStudentStatusRequest.active_term).Count();
-            short? enrollmentOpen = _ucOnlinePortalContext.CourseLists.Where(x => x.CourseCode == loginInfo.CourseCode && x.ActiveTerm == getStudentStatusRequest.active_term).Select(x => x.EnrollmentOpen).FirstOrDefault();         
+            short? enrollmentOpen = _ucOnlinePortalContext.CourseLists.Where(x => x.CourseCode == loginInfo.CourseCode && x.ActiveTerm == getStudentStatusRequest.active_term).Select(x => x.EnrollmentOpen).FirstOrDefault();
 
             if (studentStatus != null)
             {
@@ -1224,7 +1224,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             return new GetStudentStatusResponse { status = status, classification = clasify, is_cancelled = is_cancelled, needed_payment = neededPayment, pending_promissory = pending_promissory, promi_pay = promise_pay, adjustment_open = openAdjustment, enrollment_open = enrollmentOpen.Value, has_adjustment = hasAdjustment };
         }
-        
+
         /*
         * Method to View List
         */
@@ -1295,7 +1295,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             {
                 int[] statStudyload = { 6, 8, 9, 10 };
 
-                result = result.Where(x => statStudyload.Contains( (int)x.status) );
+                result = result.Where(x => statStudyload.Contains((int)x.status));
             }
             else
             {
@@ -1325,11 +1325,11 @@ namespace UCPortal.BusinessLogic.Enrollment
                                             on Oenrp.StudId equals _attachment.StudId
                                             where Oenrp.ActiveTerm == viewStudentPerStatusRequest.active_term &&
                                             _attachment.AttachmentId == (from _attach in _ucOnlinePortalContext.Attachments
-                                                                        where _attach.StudId == _attachment.StudId
-                                                                        && _attach.Type.Equals("Payment")
-                                                                        && _attach.ActiveTerm == viewStudentPerStatusRequest.active_term
-                                                                        orderby _attach.AttachmentId
-                                                                        select _attach.AttachmentId).FirstOrDefault()
+                                                                         where _attach.StudId == _attachment.StudId
+                                                                         && _attach.Type.Equals("Payment")
+                                                                         && _attach.ActiveTerm == viewStudentPerStatusRequest.active_term
+                                                                         orderby _attach.AttachmentId
+                                                                         select _attach.AttachmentId).FirstOrDefault()
                                                                         && Oenrp.Status == 8
                                             select Oenrp.StudId).ToList();
 
@@ -1347,7 +1347,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             }
 
             //if status stage requires filtering of courses, add another filter
-            if (viewStudentPerStatusRequest.status == 1 || viewStudentPerStatusRequest.status == 3 || viewStudentPerStatusRequest.status == 4 || viewStudentPerStatusRequest.status == 5 || viewStudentPerStatusRequest.status == 6 || viewStudentPerStatusRequest.status == 7 || viewStudentPerStatusRequest.status == 10 || viewStudentPerStatusRequest.status == 99 || viewStudentPerStatusRequest.status == 14 )
+            if (viewStudentPerStatusRequest.status == 1 || viewStudentPerStatusRequest.status == 3 || viewStudentPerStatusRequest.status == 4 || viewStudentPerStatusRequest.status == 5 || viewStudentPerStatusRequest.status == 6 || viewStudentPerStatusRequest.status == 7 || viewStudentPerStatusRequest.status == 10 || viewStudentPerStatusRequest.status == 99 || viewStudentPerStatusRequest.status == 14)
             {
                 var courseList = _ucOnlinePortalContext.CourseLists.Where(x => x.CourseDepartmentAbbr == viewStudentPerStatusRequest.course_department && x.ActiveTerm == viewStudentPerStatusRequest.active_term).ToList();
 
@@ -1369,7 +1369,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     result = result.Where(x => x.course_code == viewStudentPerStatusRequest.course);
                 }
             }
-            else 
+            else
             {
                 if (!viewStudentPerStatusRequest.course.Equals(String.Empty))
                 {
@@ -1399,7 +1399,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             {
                 result = result.Where(x => x.year_level == viewStudentPerStatusRequest.year_level);
             }
-             if (!viewStudentPerStatusRequest.classification.Equals(String.Empty))
+            if (!viewStudentPerStatusRequest.classification.Equals(String.Empty))
             {
                 result = result.Where(x => x.classification_abbr == viewStudentPerStatusRequest.classification);
             }
@@ -1428,7 +1428,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             var schooInfo = _ucOnlinePortalContext.SchoolInfos.Where(x => x.StudInfoId == studentinfo.StudInfoId && x.ActiveTerm == viewStudentRegistrationRequest.active_term).FirstOrDefault(); ;
             var loginInfo = _ucOnlinePortalContext.LoginInfos.Where(x => x.StudId == viewStudentRegistrationRequest.id_number).FirstOrDefault();
             var studOenrp = _ucOnlinePortalContext.Oenrps.Where(x => x.StudId == viewStudentRegistrationRequest.id_number && x.ActiveTerm == viewStudentRegistrationRequest.active_term).FirstOrDefault();
-            
+
             var attachmentList = _ucOnlinePortalContext.Attachments.Where(x => x.StudId == viewStudentRegistrationRequest.id_number && x.Type != "Payment" && x.ActiveTerm == viewStudentRegistrationRequest.active_term).ToList();
 
             if (viewStudentRegistrationRequest.payment != null && viewStudentRegistrationRequest.payment == 1)
@@ -1544,10 +1544,9 @@ namespace UCPortal.BusinessLogic.Enrollment
             if (setApproveOrDisapprovedRequest.status == 1)
             {
                 studentOenrp.Status = (short)setApproveOrDisapprovedRequest.status;
-
+                studentOenrp.Units = (short)setApproveOrDisapprovedRequest.allowed_units;
                 studentOenrp.ApprovedRegRegistrar = setApproveOrDisapprovedRequest.name_of_approver;
                 studentOenrp.ApprovedRegRegistrarOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-
                 if (!setApproveOrDisapprovedRequest.year_level.Equals(String.Empty))
                 {
                     studentOenrp.YearLevel = (short)setApproveOrDisapprovedRequest.year_level;
@@ -1599,7 +1598,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 else if (setApproveOrDisapprovedRequest.classification.Equals("H"))
                 {
                     //create new id number
-                    var config = _ucOnlinePortalContext.Configs.Where(x => x.IdYear == short.Parse(setApproveOrDisapprovedRequest.active_term.Substring(2,2))).FirstOrDefault();
+                    var config = _ucOnlinePortalContext.Configs.Where(x => x.IdYear == short.Parse(setApproveOrDisapprovedRequest.active_term.Substring(2, 2))).FirstOrDefault();
 
                     //fill with 0 those empty values
                     string sequence = config.Sequence.ToString();
@@ -1858,8 +1857,8 @@ namespace UCPortal.BusinessLogic.Enrollment
 
 
                     var dateAdjust = Strings.Format(DateAndTime.Now, "yyyy-MM-dd");
-                    _ucOnlinePortalContext.Database.ExecuteSqlRaw("UPDATE ostsp SET status = 1, adjusted_on = '" + dateAdjust + "' WHERE stud_id = '" + setApproveOrDisapprovedRequest.id_number + "' and status != 2 and status = 0 and active_term = '" + setApproveOrDisapprovedRequest.active_term + "'");                   
-                    
+                    _ucOnlinePortalContext.Database.ExecuteSqlRaw("UPDATE ostsp SET status = 1, adjusted_on = '" + dateAdjust + "' WHERE stud_id = '" + setApproveOrDisapprovedRequest.id_number + "' and status != 2 and status = 0 and active_term = '" + setApproveOrDisapprovedRequest.active_term + "'");
+
                     studentOenrp.ApprovedDean = setApproveOrDisapprovedRequest.name_of_approver;
                     studentOenrp.ApprovedDeanOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
 
@@ -1910,7 +1909,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                             };
 
                             studentOenrp.Status = 8;
-                        }                        
+                        }
                     }
                 }
             }
@@ -1952,7 +1951,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 //Insert OSTSP if section is set by dean
                 var ostsp = _ucOnlinePortalContext.Ostsps.Where(x => x.StudId == setApproveOrDisapprovedRequest.id_number && x.Status != 2 && x.ActiveTerm == setApproveOrDisapprovedRequest.active_term).Select(x => x.EdpCode).ToList();
 
-                schedules = _ucOnlinePortalContext.Schedules.Where(x => ostsp.Contains(x.EdpCode)  && x.Size >= x.MaxSize && x.ActiveTerm == setApproveOrDisapprovedRequest.active_term).ToList();
+                schedules = _ucOnlinePortalContext.Schedules.Where(x => ostsp.Contains(x.EdpCode) && x.Size >= x.MaxSize && x.ActiveTerm == setApproveOrDisapprovedRequest.active_term).ToList();
 
                 if (schedules.Count > 0)
                 {
@@ -2012,7 +2011,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                             _ucOnlinePortalContext.SaveChanges();
                         }
                     }
-                }                        
+                }
             }
             else if (setApproveOrDisapprovedRequest.status == 7)
             {
@@ -2131,7 +2130,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                 var schedulesUpdate = _ucOnlinePortalContext.Schedules.Where(x => edpCode.Contains(x.EdpCode) && x.Status != 2 && x.ActiveTerm == setApproveOrDisapprovedRequest.active_term);
                 schedulesUpdate.ToList().ForEach(x => x.PendingEnrolled = (x.PendingEnrolled.Value - 1));
-                schedulesUpdate.ToList().ForEach(x => x.OfficialEnrolled = (x.OfficialEnrolled.Value + 1));               
+                schedulesUpdate.ToList().ForEach(x => x.OfficialEnrolled = (x.OfficialEnrolled.Value + 1));
 
                 _ucOnlinePortalContext.SaveChanges();
 
@@ -2162,7 +2161,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                         constructStudyload.Append("<td>" + sched.edp_code + "</td>");
                         constructStudyload.Append("<td>" + sched.subject_name + "</td>");
                         constructStudyload.Append("<td>" + sched.subject_type + "</td>");
-                        constructStudyload.Append("<td>" + sched.begin_time + " - " + sched.end_time + " " + sched.mdn  + "</td>");
+                        constructStudyload.Append("<td>" + sched.begin_time + " - " + sched.end_time + " " + sched.mdn + "</td>");
                         constructStudyload.Append("<td>" + sched.days + "</td>");
                         constructStudyload.Append("<td>" + sched.units + "</td>");
                         constructStudyload.Append("</tr>");
@@ -2207,15 +2206,15 @@ namespace UCPortal.BusinessLogic.Enrollment
                     }
                 }
                 else
-                { 
+                {
                     foreach (SchedulesBe sched in schedulesBe)
                     {
                         edpcodes.Add(sched.EdpCode);
                     }
                 }
-                
+
                 return new SetApproveOrDisapprovedResponse { success = 0, id_number = final_id, edp_code = edpcodes };
-            }            
+            }
         }
 
         /*
@@ -2228,7 +2227,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             List<SchedulesBe> sectionsBe = new List<SchedulesBe>();
 
             department = _ucOnlinePortalContext.CourseLists.Where(x => x.CourseCode == getActiveSectionsRequest.course_code).Select(x => x.Department).FirstOrDefault();
-        
+
             //get schedules having the same coursecode and year
             var sections = _ucOnlinePortalContext.Schedules.Where(x => x.CourseCode == getActiveSectionsRequest.course_code && x.Section.Contains(getActiveSectionsRequest.year_level.ToString()) && !x.Section.Contains("XX") && x.ActiveTerm == getActiveSectionsRequest.active_term).ToList();
 
@@ -2545,7 +2544,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             var examPromi = _ucOnlinePortalContext.ExamPromissories.Where(x => x.StudId == approveReqRequest.id_number && x.ActiveTerm == approveReqRequest.active_term).FirstOrDefault();
 
             if (approveReqRequest.approved_prelim_promissory.HasValue && approveReqRequest.approved_prelim_promissory.Value == 3)
-            {             
+            {
                 examPromi.RequestPrelim = 3;
 
                 if (approveReqRequest.promise_pay == 0)
@@ -2793,7 +2792,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     {
 
                         schedulesBe = schedulesBe.Where(x => x.Section.Contains(getSectionRequest.year_level.ToString())).ToList();
-                        
+
                     }
                 }
 
@@ -2907,7 +2906,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             {
                 studentOtsp.ForEach(x => x.Status = 2);
 
-                var schedules = _ucOnlinePortalContext.Schedules.Where(x => edpCodes.Contains(x.EdpCode) && x.ActiveTerm == cancelEnrollmentRequest.active_term).ToList(); 
+                var schedules = _ucOnlinePortalContext.Schedules.Where(x => edpCodes.Contains(x.EdpCode) && x.ActiveTerm == cancelEnrollmentRequest.active_term).ToList();
                 schedules.ForEach(x => x.Size = (x.Size - 1));
             }
 
@@ -2923,7 +2922,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             _ucOnlinePortalContext.Notifications.Add(newNotif);
             _ucOnlinePortalContext.SaveChanges();
 
-            return new CancelEnrollmentResponse { success = 1};
+            return new CancelEnrollmentResponse { success = 1 };
         }
 
         /*
@@ -2965,7 +2964,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 var count_approved_dean = _ucOnlinePortalContext.Oenrps.Where(x => courses.Contains(x.CourseCode) && x.ApprovedDeanOn != null && x.ActiveTerm == getStatusCountRequest.active_term).Count();
                 counts.Add(6, count_approved_dean);
             }
-          
+
             if (!getStatusCountRequest.course_department.Equals(String.Empty))
             {
                 foreach (var line in _ucOnlinePortalContext.Oenrps.Where(x => courses.Contains(x.CourseCode) && x.ActiveTerm == getStatusCountRequest.active_term).GroupBy(x => x.Status)
@@ -2975,9 +2974,9 @@ namespace UCPortal.BusinessLogic.Enrollment
                             Count = group.Count()
                         })
                         .OrderBy(x => x.Metric))
-                {         
-                    if(line.Metric != 6)
-                        counts.Add(line.Metric, line.Count);                    
+                {
+                    if (line.Metric != 6)
+                        counts.Add(line.Metric, line.Count);
                 }
 
 
@@ -2986,13 +2985,13 @@ namespace UCPortal.BusinessLogic.Enrollment
             else
             {
                 var count_dissapprove = _ucOnlinePortalContext.Oenrps.Where(x => x.DisapprovedDeanOn != null && x.ActiveTerm == getStatusCountRequest.active_term).Count();
-                
+
                 counts.Add(7, count_dissapprove);
 
                 var count_accounting = _ucOnlinePortalContext.Oenrps.Where(x => x.ApprovedAcctgOn != null && x.ActiveTerm == getStatusCountRequest.active_term).Count();
                 counts.Add(14, count_accounting);
 
-                foreach (var line in _ucOnlinePortalContext.Oenrps.Where(x=> x.ActiveTerm == getStatusCountRequest.active_term).GroupBy(x => x.Status)
+                foreach (var line in _ucOnlinePortalContext.Oenrps.Where(x => x.ActiveTerm == getStatusCountRequest.active_term).GroupBy(x => x.Status)
                        .Select(group => new
                        {
                            Metric = group.Key,
@@ -3039,10 +3038,10 @@ namespace UCPortal.BusinessLogic.Enrollment
                 pending_prelim = (from _promi in _ucOnlinePortalContext.ExamPromissories
                                   join Oenrp in _ucOnlinePortalContext.Oenrps
                                   on _promi.StudId equals Oenrp.StudId
-                                  where courses.Contains(Oenrp.CourseCode) && ( _promi.RequestPrelim == 1 ) 
+                                  where courses.Contains(Oenrp.CourseCode) && (_promi.RequestPrelim == 1)
                                   && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
-                                  select new  { 
-                                    id_number = Oenrp.StudId
+                                  select new {
+                                      id_number = Oenrp.StudId
                                   }).Count();
 
                 approve_prelim = (from _promi in _ucOnlinePortalContext.ExamPromissories
@@ -3056,19 +3055,19 @@ namespace UCPortal.BusinessLogic.Enrollment
                                   }).Count();
 
                 pending_midterm = (from _promi in _ucOnlinePortalContext.ExamPromissories
-                                  join Oenrp in _ucOnlinePortalContext.Oenrps
-                                  on _promi.StudId equals Oenrp.StudId
-                                  where courses.Contains(Oenrp.CourseCode) && (_promi.RequestMidterm == 1)
-                                   && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
+                                   join Oenrp in _ucOnlinePortalContext.Oenrps
+                                   on _promi.StudId equals Oenrp.StudId
+                                   where courses.Contains(Oenrp.CourseCode) && (_promi.RequestMidterm == 1)
+                                    && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
                                    select new
-                                  {
-                                      id_number = Oenrp.StudId
-                                  }).Count();
+                                   {
+                                       id_number = Oenrp.StudId
+                                   }).Count();
 
                 approve_midterm = (from _promi in _ucOnlinePortalContext.ExamPromissories
                                    join Oenrp in _ucOnlinePortalContext.Oenrps
                                    on _promi.StudId equals Oenrp.StudId
-                                   where courses.Contains(Oenrp.CourseCode) && (_promi.RequestMidterm == 3 )
+                                   where courses.Contains(Oenrp.CourseCode) && (_promi.RequestMidterm == 3)
                                     && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
                                    select new
                                    {
@@ -3076,44 +3075,44 @@ namespace UCPortal.BusinessLogic.Enrollment
                                    }).Count();
 
                 pending_semi = (from _promi in _ucOnlinePortalContext.ExamPromissories
-                                   join Oenrp in _ucOnlinePortalContext.Oenrps
-                                   on _promi.StudId equals Oenrp.StudId
-                                   where courses.Contains(Oenrp.CourseCode) && (_promi.RequestSemi == 1)
-                                   && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
-                                   select new
-                                   {
-                                       id_number = Oenrp.StudId
-                                   }).Count();
-
-                approve_semi = (from _promi in _ucOnlinePortalContext.ExamPromissories
-                                   join Oenrp in _ucOnlinePortalContext.Oenrps
-                                   on _promi.StudId equals Oenrp.StudId
-                                   where courses.Contains(Oenrp.CourseCode) && (_promi.RequestSemi == 3)
-                                   && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
-                                   select new
-                                   {
-                                       id_number = Oenrp.StudId
-                                   }).Count();
-
-                pending_final = (from _promi in _ucOnlinePortalContext.ExamPromissories
                                 join Oenrp in _ucOnlinePortalContext.Oenrps
                                 on _promi.StudId equals Oenrp.StudId
-                                where courses.Contains(Oenrp.CourseCode) && (_promi.RequestFinal == 1)
+                                where courses.Contains(Oenrp.CourseCode) && (_promi.RequestSemi == 1)
                                 && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
                                 select new
                                 {
                                     id_number = Oenrp.StudId
                                 }).Count();
 
-                approve_final = (from _promi in _ucOnlinePortalContext.ExamPromissories
+                approve_semi = (from _promi in _ucOnlinePortalContext.ExamPromissories
                                 join Oenrp in _ucOnlinePortalContext.Oenrps
                                 on _promi.StudId equals Oenrp.StudId
-                                where courses.Contains(Oenrp.CourseCode) && (_promi.RequestFinal == 3)
+                                where courses.Contains(Oenrp.CourseCode) && (_promi.RequestSemi == 3)
                                 && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
                                 select new
                                 {
                                     id_number = Oenrp.StudId
-                                }).Count();                
+                                }).Count();
+
+                pending_final = (from _promi in _ucOnlinePortalContext.ExamPromissories
+                                 join Oenrp in _ucOnlinePortalContext.Oenrps
+                                 on _promi.StudId equals Oenrp.StudId
+                                 where courses.Contains(Oenrp.CourseCode) && (_promi.RequestFinal == 1)
+                                 && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
+                                 select new
+                                 {
+                                     id_number = Oenrp.StudId
+                                 }).Count();
+
+                approve_final = (from _promi in _ucOnlinePortalContext.ExamPromissories
+                                 join Oenrp in _ucOnlinePortalContext.Oenrps
+                                 on _promi.StudId equals Oenrp.StudId
+                                 where courses.Contains(Oenrp.CourseCode) && (_promi.RequestFinal == 3)
+                                 && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
+                                 select new
+                                 {
+                                     id_number = Oenrp.StudId
+                                 }).Count();
             }
             else
             {
@@ -3133,7 +3132,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 approve_prelim = (from _promi in _ucOnlinePortalContext.ExamPromissories
                                   join Oenrp in _ucOnlinePortalContext.Oenrps
                                   on _promi.StudId equals Oenrp.StudId
-                                  where  (_promi.RequestPrelim == 3)
+                                  where (_promi.RequestPrelim == 3)
                                   && _promi.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
                                   select new
                                   {
@@ -3212,14 +3211,14 @@ namespace UCPortal.BusinessLogic.Enrollment
 
 
                 ack_prelim = (from _attach in _ucOnlinePortalContext.Attachments
-                                 join Oenrp in _ucOnlinePortalContext.Oenrps
-                                 on _attach.StudId equals Oenrp.StudId
-                                 where (_attach.Filename.Contains("_[payment]_[") && _attach.Acknowledged == 1)
-                                 && _attach.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
+                              join Oenrp in _ucOnlinePortalContext.Oenrps
+                              on _attach.StudId equals Oenrp.StudId
+                              where (_attach.Filename.Contains("_[payment]_[") && _attach.Acknowledged == 1)
+                              && _attach.ActiveTerm == getStatusCountRequest.active_term && Oenrp.ActiveTerm == getStatusCountRequest.active_term
                               select new
-                                 {
-                                     id_number = Oenrp.StudId
-                                 }).Distinct().Count();
+                              {
+                                  id_number = Oenrp.StudId
+                              }).Distinct().Count();
             }
 
             GetStatusCountResponse response = new GetStatusCountResponse
@@ -3257,12 +3256,12 @@ namespace UCPortal.BusinessLogic.Enrollment
                 notaack_receipts = notack_prelim
             };
 
-             return response;
+            return response;
         }
 
-       /*
-       * Method to save payments
-       */
+        /*
+        * Method to save payments
+        */
         public SavePaymentResponse SavePayments(SavePaymentRequest savePaymentsRequest)
         {
             if (savePaymentsRequest.attachments.Count > 0)
@@ -3291,7 +3290,7 @@ namespace UCPortal.BusinessLogic.Enrollment
        * Method to view classlist
        */
         public ViewClasslistResponse ViewClasslist(ViewClasslistRequest viewClasslistRequest)
-        {   
+        {
             List<ViewClasslistResponse.Enrolled> result = new List<ViewClasslistResponse.Enrolled>();
 
             var schedule = _ucOnlinePortalContext.Schedules.Where(x => x.EdpCode == viewClasslistRequest.edp_code && x.ActiveTerm == viewClasslistRequest.active_term).FirstOrDefault();
@@ -3401,7 +3400,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             var department = _ucOnlinePortalContext.CourseLists.Where(x => x.CourseCode == courC && x.ActiveTerm == viewClasslistRequest.active_term).Select(x => x.Department).FirstOrDefault();
 
-            if ( (department.Equals("SH") || department.Equals("JH") || department.Equals("BE")))
+            if ((department.Equals("SH") || department.Equals("JH") || department.Equals("BE")))
             {
                 OfficialEnrolled = result.Where(x => x.status == 3).OrderBy(x => x.gender).ThenBy(x => x.last_name).ToList();
                 PendingEnrolled = result.Where(x => x.status == 1).OrderBy(x => x.gender).ThenBy(x => x.last_name).ToList();
@@ -3417,7 +3416,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 if (studOenrp.Section != null && !studOenrp.Section.Equals(String.Empty))
                 {
                     not_accepted.Add(enr);
-                }               
+                }
             }
 
             ViewClasslistResponse response = null;
@@ -3441,7 +3440,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 };
             }
             else
-            {               
+            {
                 response = new ViewClasslistResponse
                 {
                     edp_code = scheduleBe.EdpCode,
@@ -3702,7 +3701,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             studLoginInfo.Year = (short)updateStudentInfoRequest.year;
             studLoginInfo.MobileNumber = updateStudentInfoRequest.mobile;
             studLoginInfo.Facebook = updateStudentInfoRequest.facebook;
-            
+
 
             //Add OENRP
             Oenrp newStudentOenrp = new Oenrp
@@ -3714,7 +3713,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 Units = 0,
                 Classification = updateStudentInfoRequest.classification,
                 Dept = updateStudentInfoRequest.dept,
-                Status = (short)EnrollmentStatus.REGISTERED,
+                Status = updateStudentInfoRequest.classification == "S" || updateStudentInfoRequest.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED,
                 AdjustmentCount = 1,
                 RequestDeblock = 0,
                 RequestOverload = 0,
@@ -3745,7 +3744,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             studentOenrp.ApprovedRegRegistrar = "AUTO-APPROVE";
             studentOenrp.ApprovedRegRegistrarOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-            studentOenrp.Status = 1;
+            studentOenrp.Status = updateStudentInfoRequest.classification == "S" || updateStudentInfoRequest.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.APPROVED_REGISTRATION_REGISTRAR;
 
             newNotification = new Notification
             {
@@ -3759,7 +3758,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             _ucOnlinePortalContext.Notifications.Add(newNotification);
             _ucOnlinePortalContext.SaveChanges();
 
-            return new UpdateStudentInfoResponse { success = 1};
+            return new UpdateStudentInfoResponse { success = 1 };
         }
 
         /*
@@ -3917,7 +3916,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             }
 
             oldStudInfo.attachments = attach;
-            
+
             return oldStudInfo;
         }
 
@@ -3957,11 +3956,11 @@ namespace UCPortal.BusinessLogic.Enrollment
                     SplitCode = subject.SplitCode,
                     IsGened = subject.IsGened,
                     status = subject.Status
-                    
+
                 };
 
                 return subjectResponse;
-            }        
+            }
         }
 
         /*
@@ -3992,7 +3991,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             _ucOnlinePortalContext.Schedules.Update(subject);
             _ucOnlinePortalContext.SaveChanges();
 
-            return new UpdateSubjectResponse { success = 1};
+            return new UpdateSubjectResponse { success = 1 };
         }
 
         /*
@@ -4016,7 +4015,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 {
                     var studOstsp = _ucOnlinePortalContext.Oenrps.Where(x => x.StudId == ost.StudId && x.ActiveTerm == removeDuplicateOstspRequest.active_term).FirstOrDefault();
 
-                    if (studOstsp != null) 
+                    if (studOstsp != null)
                     {
                         if (studOstsp.Section != null && !studOstsp.Section.Equals(String.Empty))
                         {
@@ -4027,7 +4026,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                         }
                         else
                         {
-                            if(ost.Status == 3)
+                            if (ost.Status == 3)
                                 official++;
                             else if (ost.Status == 1)
                                 pending++;
@@ -4053,11 +4052,11 @@ namespace UCPortal.BusinessLogic.Enrollment
                     scheduleBe.OfficialEnrolled = official;
 
                     _ucOnlinePortalContext.SchedulesBes.Update(scheduleBe);
-                }                
+                }
                 _ucOnlinePortalContext.SaveChanges();
             }
 
-            return new RemoveDuplicateOtspResponse { success = 1};
+            return new RemoveDuplicateOtspResponse { success = 1 };
         }
 
         /*
@@ -4205,7 +4204,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                     var hasOstsp = _ucOnlinePortalContext.Ostsps.Where(x => x.StudId == updateStudentStatusRequest.id_number && x.ActiveTerm == updateStudentStatusRequest.active_term).ToList();
 
-                    if (hasOstsp != null && (updateStudentStatusRequest.new_status < 3 ))
+                    if (hasOstsp != null && (updateStudentStatusRequest.new_status < 3))
                     {
                         foreach (Ostsp ostsp in hasOstsp)
                         {
@@ -4227,7 +4226,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                                 if (ostsp.Status == 0)
                                 {
                                     schedule.Size = schedule.Size - 1;
-                                    schedule.PendingEnrolled = schedule.PendingEnrolled - 1;                                    
+                                    schedule.PendingEnrolled = schedule.PendingEnrolled - 1;
                                 }
                             }
 
@@ -4242,7 +4241,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                         _ucOnlinePortalContext.Ostsps.RemoveRange(_ucOnlinePortalContext.Ostsps.Where(x => x.StudId == updateStudentStatusRequest.id_number && x.ActiveTerm == updateStudentStatusRequest.active_term));
                     }
                 }
-                
+
                 _ucOnlinePortalContext.Oenrps.Update(studOenrp);
                 _ucOnlinePortalContext.SaveChanges();
             }
@@ -4272,8 +4271,8 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                 if (split_edp.Length > 1)
                 {
-                    
-                    foreach(string os in split_edp)
+
+                    foreach (string os in split_edp)
                     {
                         Ostsp ostpN = new Ostsp
                         {
@@ -4343,7 +4342,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 _ucOnlinePortalContext.Promissories.Add(newProm);
                 _ucOnlinePortalContext.SaveChanges();
             }
-            
+
             return new RequestPromissoryResponse { success = 1 }; ;
         }
 
@@ -4360,7 +4359,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                           on Oenrp.CourseCode equals _courseList.CourseCode
                           join _promi in _ucOnlinePortalContext.Promissories
                           on Oenrp.StudId equals _promi.StudId
-                          where ( Oenrp.Status == 8 || Oenrp.Status == 10) && Oenrp.RequestPromissory == getPromissoryListRequest.status
+                          where (Oenrp.Status == 8 || Oenrp.Status == 10) && Oenrp.RequestPromissory == getPromissoryListRequest.status
                           && Oenrp.ActiveTerm == getPromissoryListRequest.active_term && _courseList.ActiveTerm == getPromissoryListRequest.active_term
                           && _promi.ActiveTerm == getPromissoryListRequest.active_term
                           select new GetPromissoryListResponse.Student
@@ -4410,8 +4409,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                 var result = (from Ostsp in _ucOnlinePortalContext.Ostsps
                               join Schedule in _ucOnlinePortalContext.Schedules
                               on Ostsp.EdpCode equals Schedule.EdpCode
-                              where Ostsp.StudId == Oenrp.StudId && 
-                              ( Ostsp.Status == 1 || Ostsp.Status == 3 )
+                              where Ostsp.StudId == Oenrp.StudId &&
+                              (Ostsp.Status == 1 || Ostsp.Status == 3)
                               && Ostsp.ActiveTerm == correctTotalUnitsRequest.active_term
                               && Schedule.ActiveTerm == correctTotalUnitsRequest.active_term
                               select new {
@@ -4534,7 +4533,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             if (!getTeachersListRequest.id_number.Equals(String.Empty))
             {
-                TeachersList = TeachersList.Where(x => ( x.FirstName + x.LastName ).Contains(getTeachersListRequest.name));
+                TeachersList = TeachersList.Where(x => (x.FirstName + x.LastName).Contains(getTeachersListRequest.name));
             }
 
             List<GetTeachersListResponse.Teachers> teachers = new List<GetTeachersListResponse.Teachers>();
@@ -4614,80 +4613,80 @@ namespace UCPortal.BusinessLogic.Enrollment
             }
             else
             {
-                    //Get data from Ostsp and Schedules
-                    result = (from Schedules in _ucOnlinePortalContext.Schedules
-                              join _subject_info in _ucOnlinePortalContext.SubjectInfos
-                              on Schedules.InternalCode equals _subject_info.InternalCode into sched
-                              from _subject_info in sched.DefaultIfEmpty()
-                              join _courselist in _ucOnlinePortalContext.CourseLists
-                              on Schedules.CourseCode equals _courselist.CourseCode into course
-                              from _courselist in course.DefaultIfEmpty()
-                              where Schedules.Instructor == getTeachersLoadRequest.id_number
-                              && _courselist.ActiveTerm == getTeachersLoadRequest.active_term && Schedules.ActiveTerm == getTeachersLoadRequest.active_term
-                              select new GetTeachersLoadResponse.Schedules
-                              {
-                                  edpcode = Schedules.EdpCode,
-                                  subject_name = Schedules.Description,
-                                  subject_type = Schedules.SubType,
-                                  days = Schedules.Days,
-                                  begin_time = Schedules.TimeStart,
-                                  end_time = Schedules.TimeEnd,
-                                  mdn = Schedules.Mdn,
-                                  m_begin_time = Schedules.MTimeStart,
-                                  m_end_time = Schedules.MTimeEnd,
-                                  m_days = Schedules.MDays,
-                                  size = Schedules.Size,
-                                  max_size = Schedules.MaxSize,
-                                  units = Schedules.Units,
-                                  room = Schedules.Room,
-                                  descriptive_title = _subject_info.Descr1 + _subject_info.Descr2,
-                                  split_code = Schedules.SplitCode,
-                                  split_type = Schedules.SplitType,
-                                  section = Schedules.Section,
-                                  course_abbr = _courselist.CourseAbbr,
-                                  pending_enrolled = Schedules.PendingEnrolled.Value,
-                                  official_enrolled = Schedules.OfficialEnrolled.Value,
-                                  dept = _courselist.Department
-                                  
-                              }).ToList();
-                    
-                    //Get data from Ostsp and Schedules
-                    var result2 = (from Schedules in _ucOnlinePortalContext.SchedulesBes
-                              join _subject_info in _ucOnlinePortalContext.SubjectInfos
-                              on Schedules.InternalCode equals _subject_info.InternalCode into sched
-                              from _subject_info in sched.DefaultIfEmpty()
-                              join _courselist in _ucOnlinePortalContext.CourseLists
-                              on Schedules.CourseCode equals _courselist.CourseCode into course
-                              from _courselist in course.DefaultIfEmpty()
-                              where Schedules.Instructor == getTeachersLoadRequest.id_number
-                              && _courselist.ActiveTerm == getTeachersLoadRequest.active_term && Schedules.ActiveTerm == getTeachersLoadRequest.active_term
-                              select new GetTeachersLoadResponse.Schedules
-                              {
-                                  edpcode = Schedules.EdpCode,
-                                  subject_name = Schedules.Description,
-                                  subject_type = Schedules.SubType,
-                                  days = Schedules.Days,
-                                  begin_time = Schedules.TimeStart,
-                                  end_time = Schedules.TimeEnd,
-                                  mdn = Schedules.Mdn,
-                                  m_begin_time = Schedules.MTimeStart,
-                                  m_end_time = Schedules.MTimeEnd,
-                                  m_days = Schedules.MDays,
-                                  size = Schedules.Size,
-                                  max_size = Schedules.MaxSize,
-                                  units = Schedules.Units,
-                                  room = Schedules.Room,
-                                  descriptive_title = _subject_info.Descr1 + _subject_info.Descr2,
-                                  split_code = Schedules.SplitCode,
-                                  split_type = Schedules.SplitType,
-                                  section = Schedules.Section,
-                                  course_abbr = _courselist.CourseAbbr,
-                                  pending_enrolled = Schedules.PendingEnrolled.Value,
-                                  official_enrolled = Schedules.OfficialEnrolled.Value,
-                                  dept = _courselist.Department
-                              }).ToList();
+                //Get data from Ostsp and Schedules
+                result = (from Schedules in _ucOnlinePortalContext.Schedules
+                          join _subject_info in _ucOnlinePortalContext.SubjectInfos
+                          on Schedules.InternalCode equals _subject_info.InternalCode into sched
+                          from _subject_info in sched.DefaultIfEmpty()
+                          join _courselist in _ucOnlinePortalContext.CourseLists
+                          on Schedules.CourseCode equals _courselist.CourseCode into course
+                          from _courselist in course.DefaultIfEmpty()
+                          where Schedules.Instructor == getTeachersLoadRequest.id_number
+                          && _courselist.ActiveTerm == getTeachersLoadRequest.active_term && Schedules.ActiveTerm == getTeachersLoadRequest.active_term
+                          select new GetTeachersLoadResponse.Schedules
+                          {
+                              edpcode = Schedules.EdpCode,
+                              subject_name = Schedules.Description,
+                              subject_type = Schedules.SubType,
+                              days = Schedules.Days,
+                              begin_time = Schedules.TimeStart,
+                              end_time = Schedules.TimeEnd,
+                              mdn = Schedules.Mdn,
+                              m_begin_time = Schedules.MTimeStart,
+                              m_end_time = Schedules.MTimeEnd,
+                              m_days = Schedules.MDays,
+                              size = Schedules.Size,
+                              max_size = Schedules.MaxSize,
+                              units = Schedules.Units,
+                              room = Schedules.Room,
+                              descriptive_title = _subject_info.Descr1 + _subject_info.Descr2,
+                              split_code = Schedules.SplitCode,
+                              split_type = Schedules.SplitType,
+                              section = Schedules.Section,
+                              course_abbr = _courselist.CourseAbbr,
+                              pending_enrolled = Schedules.PendingEnrolled.Value,
+                              official_enrolled = Schedules.OfficialEnrolled.Value,
+                              dept = _courselist.Department
 
-                result.AddRange(result2);                
+                          }).ToList();
+
+                //Get data from Ostsp and Schedules
+                var result2 = (from Schedules in _ucOnlinePortalContext.SchedulesBes
+                               join _subject_info in _ucOnlinePortalContext.SubjectInfos
+                               on Schedules.InternalCode equals _subject_info.InternalCode into sched
+                               from _subject_info in sched.DefaultIfEmpty()
+                               join _courselist in _ucOnlinePortalContext.CourseLists
+                               on Schedules.CourseCode equals _courselist.CourseCode into course
+                               from _courselist in course.DefaultIfEmpty()
+                               where Schedules.Instructor == getTeachersLoadRequest.id_number
+                               && _courselist.ActiveTerm == getTeachersLoadRequest.active_term && Schedules.ActiveTerm == getTeachersLoadRequest.active_term
+                               select new GetTeachersLoadResponse.Schedules
+                               {
+                                   edpcode = Schedules.EdpCode,
+                                   subject_name = Schedules.Description,
+                                   subject_type = Schedules.SubType,
+                                   days = Schedules.Days,
+                                   begin_time = Schedules.TimeStart,
+                                   end_time = Schedules.TimeEnd,
+                                   mdn = Schedules.Mdn,
+                                   m_begin_time = Schedules.MTimeStart,
+                                   m_end_time = Schedules.MTimeEnd,
+                                   m_days = Schedules.MDays,
+                                   size = Schedules.Size,
+                                   max_size = Schedules.MaxSize,
+                                   units = Schedules.Units,
+                                   room = Schedules.Room,
+                                   descriptive_title = _subject_info.Descr1 + _subject_info.Descr2,
+                                   split_code = Schedules.SplitCode,
+                                   split_type = Schedules.SplitType,
+                                   section = Schedules.Section,
+                                   course_abbr = _courselist.CourseAbbr,
+                                   pending_enrolled = Schedules.PendingEnrolled.Value,
+                                   official_enrolled = Schedules.OfficialEnrolled.Value,
+                                   dept = _courselist.Department
+                               }).ToList();
+
+                result.AddRange(result2);
 
                 return new GetTeachersLoadResponse { schedules = result };
             }
@@ -4844,7 +4843,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                           on Schedules.CourseCode equals _courselist.CourseCode into course
                           from _courselist in course.DefaultIfEmpty()
                           where Ostsp.StudId == getAdjustmentDetailRequest.id_number
-                          && ( Ostsp.Status == 4 || Ostsp.Status == 5 )
+                          && (Ostsp.Status == 4 || Ostsp.Status == 5)
                           && Ostsp.ActiveTerm == getAdjustmentDetailRequest.active_term && Schedules.ActiveTerm == getAdjustmentDetailRequest.active_term
                           && _courselist.ActiveTerm == getAdjustmentDetailRequest.active_term
                           select new GetAdjustmentDetailResponse.Schedules
@@ -4965,7 +4964,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                             var ostspR = _ucOnlinePortalContext.Ostsps.Where(x => x.StudId == approveAdjustmentRequest.id_number && x.Status == 1 && x.EdpCode == edpc && x.ActiveTerm == approveAdjustmentRequest.active_term);
                             ostspR.ToList().ForEach(x => x.Status = 2);
-                        }                        
+                        }
 
                         _ucOnlinePortalContext.Schedules.Update(sched);
                         _ucOnlinePortalContext.SaveChanges();
@@ -4994,7 +4993,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             else
             {
                 studOenrp.AdjustmentCount = 8;
-                _ucOnlinePortalContext.Ostsps.RemoveRange(_ucOnlinePortalContext.Ostsps.Where(x => x.StudId == approveAdjustmentRequest.id_number && ( x.Status == 4 || x.Status == 5 ) && x.ActiveTerm == approveAdjustmentRequest.active_term));
+                _ucOnlinePortalContext.Ostsps.RemoveRange(_ucOnlinePortalContext.Ostsps.Where(x => x.StudId == approveAdjustmentRequest.id_number && (x.Status == 4 || x.Status == 5) && x.ActiveTerm == approveAdjustmentRequest.active_term));
 
                 Notification newNotif = new Notification
                 {
@@ -5098,8 +5097,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                         Remarks = null,
                         AdjustedOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                         ActiveTerm = transferSectionRequest.active_term
-                    };                    
-                   
+                    };
+
                     sched.OfficialEnrolled = sched.OfficialEnrolled + 1;
 
                     _ucOnlinePortalContext.Schedules.Update(sched);
@@ -5247,7 +5246,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 }
             }
 
-            return new CorrectLabAndLecResponse { success = 1};
+            return new CorrectLabAndLecResponse { success = 1 };
         }
 
         public SendNotificationForDissolvedResponse SendNotificationDissolved(SendNotificationRequest sendNotificationRequest)
@@ -5430,7 +5429,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 }
 
                 return new CourseLMSReportResponse { courses = result.ToList() };
-            }           
+            }
         }
 
         public EnrolledLMSReportResponse CreateLMSEnrolledReport(EnrolledLMSReportRequest enrolledLMSReportRequest)
@@ -5692,7 +5691,7 @@ namespace UCPortal.BusinessLogic.Enrollment
         {
             var configBasic = _ucOnlinePortalContext.Configs.Where(x => x.ActiveTerm == getBasicEdMonthRequest.active_term).FirstOrDefault();
 
-            return new GetBasicEdMonthResponse { start_month = new DateTime(2021, configBasic.BasicStart,1).ToString("MMMM"), end_month = new DateTime(2021, configBasic.BasicEnd, 1).ToString("MMMM") };
+            return new GetBasicEdMonthResponse { start_month = new DateTime(2021, configBasic.BasicStart, 1).ToString("MMMM"), end_month = new DateTime(2021, configBasic.BasicEnd, 1).ToString("MMMM") };
         }
 
         public GetStudentBalancePerCategoryResponse GetStudentBalancePerCategory(GetStudentBalancePerCategoryRequest getStudentBalancePerCategoryRequest)
@@ -5844,7 +5843,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                               join _course in _ucOnlinePortalContext.CourseLists
                               on _loginfo.CourseCode equals _course.CourseCode
                               where _ostsp.EdpCode == viewPermitListRequest.edp_code && (_ostsp.Status == 1 || _ostsp.Status == 3)
-                              && _ostsp.ActiveTerm == viewPermitListRequest.active_term && Schedule.ActiveTerm == viewPermitListRequest.active_term 
+                              && _ostsp.ActiveTerm == viewPermitListRequest.active_term && Schedule.ActiveTerm == viewPermitListRequest.active_term
                               && _course.ActiveTerm == viewPermitListRequest.active_term
                               select new ViewPermitListResponse.Enrolled
                               {
@@ -5995,7 +5994,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             }
             else
             {
-                var basicAss = _ucOnlinePortalContext.AssessmentBes.Where(x => x.StudId == requestExamPromiRequest.stud_id && x.Exam == requestExamPromiRequest.exam && x.ActiveTerm == requestExamPromiRequest.active_term ).FirstOrDefault();
+                var basicAss = _ucOnlinePortalContext.AssessmentBes.Where(x => x.StudId == requestExamPromiRequest.stud_id && x.Exam == requestExamPromiRequest.exam && x.ActiveTerm == requestExamPromiRequest.active_term).FirstOrDefault();
                 if (basicAss != null)
                 {
                     amountDue = basicAss.AmountDue;
@@ -6021,7 +6020,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             {
                 hasData = _ucOnlinePortalContext.ExamPromissories.Where(x => x.StudId == requestExamPromiRequest.stud_id && x.RequestSemiDate != null && x.ActiveTerm == requestExamPromiRequest.active_term).Count();
             }
-            else 
+            else
             {
                 hasData = _ucOnlinePortalContext.ExamPromissories.Where(x => x.StudId == requestExamPromiRequest.stud_id && x.RequestFinalDate != null && x.ActiveTerm == requestExamPromiRequest.active_term).Count();
             }
@@ -6085,7 +6084,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                             RequestMidtermDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                             RequestMidtermAmount = requestExamPromiRequest.promise_pay,
                             ActiveTerm = requestExamPromiRequest.active_term
-                    };
+                        };
 
                         _ucOnlinePortalContext.ExamPromissories.Add(examProm);
                         _ucOnlinePortalContext.SaveChanges();
@@ -6111,7 +6110,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                             RequestSemiDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                             RequestSemiAmount = requestExamPromiRequest.promise_pay,
                             ActiveTerm = requestExamPromiRequest.active_term
-                    };
+                        };
 
                         _ucOnlinePortalContext.ExamPromissories.Add(examProm);
                         _ucOnlinePortalContext.SaveChanges();
@@ -6495,7 +6494,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             int take = (int)getStudentPaymentListRequest.limit;
             int skip = (int)getStudentPaymentListRequest.limit * ((int)getStudentPaymentListRequest.page - 1);
-            
+
             //always get status 5 -> for dean
             var result = (from Oenrp in _ucOnlinePortalContext.Oenrps
                           join _loginInfo in _ucOnlinePortalContext.LoginInfos
@@ -6544,7 +6543,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             List<GetStudentPaymentListResponse.Student> newStudentList = new List<GetStudentPaymentListResponse.Student>();
 
-            foreach(GetStudentPaymentListResponse.Student student in nnRe)
+            foreach (GetStudentPaymentListResponse.Student student in nnRe)
             {
                 GetStudentPaymentListResponse.Student nStud = new GetStudentPaymentListResponse.Student
                 {
@@ -6739,7 +6738,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 {
                     isSHS = _ucOnlinePortalContext.CourseLists.Where(x => x.CourseCode == scheduleBe.CourseCode && x.ActiveTerm == uploadGradesRequest.active_term).Select(x => x.Department).FirstOrDefault();
                 }
-               
+
 
                 if (isSHS.Equals("SH"))
                 {
@@ -6782,7 +6781,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                         }
 
                         if (uploadGradesRequest.exam == 1)
-                        {                            
+                        {
                             if (GradesExist == null)
                             {
                                 GradesSh gradeSh = new GradesSh
@@ -6818,11 +6817,11 @@ namespace UCPortal.BusinessLogic.Enrollment
                                 GradeEvalExist.MidtermGrade = grade.grade;
                                 _ucOnlinePortalContext.GradeEvaluations.Update(GradeEvalExist);
                             }
-                                              
+
                             _ucOnlinePortalContext.SaveChanges();
                         }
                         else
-                        {                           
+                        {
 
                             if (GradesExist == null)
                             {
@@ -6862,7 +6861,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                             }
 
                             _ucOnlinePortalContext.SaveChanges();
-                        }                       
+                        }
 
                     }
                 }
@@ -7074,8 +7073,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                             }
 
                             _ucOnlinePortalContext.SaveChanges();
-                        }                        
-                    }                    
+                        }
+                    }
                 }
                 else
                 {
@@ -7155,7 +7154,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                                 GradeEvalExist.MidtermGrade = grade.grade;
                                 _ucOnlinePortalContext.GradeEvaluations.Update(GradeEvalExist);
                             }
-                            
+
                             _ucOnlinePortalContext.SaveChanges();
                         }
                         else
@@ -7196,9 +7195,9 @@ namespace UCPortal.BusinessLogic.Enrollment
                                 GradeEvalExist.FinalGrade = grade.grade;
                                 _ucOnlinePortalContext.GradeEvaluations.Update(GradeEvalExist);
                             }
-                            
+
                             _ucOnlinePortalContext.SaveChanges();
-                        }                        
+                        }
                     }
                 }
 
@@ -7422,7 +7421,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                         _ucOnlinePortalContext.SaveChanges();
                     }
 
-                    return new UploadCoreValuesResponse { success = 1 }; 
+                    return new UploadCoreValuesResponse { success = 1 };
                 }
                 else if (uploadCoreValuesRequest.exam == 4)
                 {
@@ -7464,7 +7463,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                         _ucOnlinePortalContext.SaveChanges();
                     }
 
-                    return new UploadCoreValuesResponse { success = 1 }; 
+                    return new UploadCoreValuesResponse { success = 1 };
                 }
             }
 
@@ -7528,7 +7527,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                                     && Schedule.SplitType != "C"
                                     select Schedule.EdpCode + " - " + Schedule.Description).ToList();
                 }
-               
+
 
                 var schedulesIn = _ucOnlinePortalContext.Schedules.Where(x => x.Instructor == insid).ToList();
                 var schedulesInBe = _ucOnlinePortalContext.SchedulesBes.Where(x => x.Instructor == insid).ToList();
@@ -7638,7 +7637,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                                 not_submitted++;
                                 not_submittedlst.Add(sched.EdpCode + " - " + sched.Description);
                             }
-                        }                        
+                        }
                     }
                 }
 
@@ -7724,10 +7723,10 @@ namespace UCPortal.BusinessLogic.Enrollment
                         submitted = submitteGd
                     };
                     gradeRep.Add(gradeReport);
-                }               
+                }
 
             }
-            return new GradeReportResponse {  gradeR = gradeRep };
+            return new GradeReportResponse { gradeR = gradeRep };
         }
 
         public ViewGradesResponse ViewGrades(ViewGradesRequest viewGradesRequest)
@@ -7801,13 +7800,13 @@ namespace UCPortal.BusinessLogic.Enrollment
                         bTermTo = viewGradesRequest.active_term.Substring(0, 4) + "2";
                     }
 
-                    var eval = _ucOnlinePortalContext.SchedulesBes.Where(x => x.EdpCode == viewGradesRequest.edp_code && ( x.ActiveTerm == viewGradesRequest.active_term || x.ActiveTerm == bTermTo)).FirstOrDefault();             
+                    var eval = _ucOnlinePortalContext.SchedulesBes.Where(x => x.EdpCode == viewGradesRequest.edp_code && (x.ActiveTerm == viewGradesRequest.active_term || x.ActiveTerm == bTermTo)).FirstOrDefault();
 
                     grades = (from GradesBe in _ucOnlinePortalContext.GradeEvaluationBes
                               join _loginInfo in _ucOnlinePortalContext.LoginInfos
                               on GradesBe.StudId equals _loginInfo.StudId
                               where GradesBe.IntCode == eval.InternalCode
-                              && ( GradesBe.Term == viewGradesRequest.active_term || GradesBe.Term == bTermTo )
+                              && (GradesBe.Term == viewGradesRequest.active_term || GradesBe.Term == bTermTo)
                               select new ViewGradesResponse.student_grade
                               {
                                   id_number = _loginInfo.StudId,
@@ -8052,12 +8051,12 @@ namespace UCPortal.BusinessLogic.Enrollment
             if (getLoginInfo == null)
             {
                 //return empty data
-                return new GetCurriculumResponse {  };
-            }
-           /* 
-            if (getLoginInfo.CurrYear == null)
                 return new GetCurriculumResponse { };
-           */
+            }
+            /* 
+             if (getLoginInfo.CurrYear == null)
+                 return new GetCurriculumResponse { };
+            */
             var getUnits = 0;
             if (getLoginInfo.AllowedUnits != null)
             { //getStudent_ornrp.Units 0
@@ -8151,10 +8150,15 @@ namespace UCPortal.BusinessLogic.Enrollment
                 return new StudentSubjectResponse { success = 0 };
             }
 
-            var checkIfExistSubjectRequest = _ucOnlinePortalContext.RequestSchedules.Where(x => x.InternalCode == studentRequest.internal_code).FirstOrDefault();
+            var checkIfExistSubjectRequest = _ucOnlinePortalContext.RequestSchedules.Where(x => x.InternalCode == studentRequest.internal_code && x.Term == studentRequest.term).FirstOrDefault();
 
             if (checkIfExistSubjectRequest == null)
             {
+                if (getSubjectInfo.SplitCode != null || getSubjectInfo.SplitCode != "")
+                {
+                    //continuation -- Lab to be re
+                }
+
                 RequestSchedule subjectRequest = new RequestSchedule
                 {
                     SubjectName = getSubjectInfo.SubjectName,
@@ -8165,20 +8169,32 @@ namespace UCPortal.BusinessLogic.Enrollment
                     Rtype = studentRequest.rtype,
                     MTimeEnd = studentRequest.m_time_start,
                     MTimeStart = studentRequest.m_time_end,
+                    Size = 0,
                     Status = 0,
-                    InternalCode = studentRequest.internal_code
+                    InternalCode = studentRequest.internal_code,
+                    Term = studentRequest.term
                 };
                 _ucOnlinePortalContext.RequestSchedules.Add(subjectRequest);
+                _ucOnlinePortalContext.SaveChanges();
             }
-            var checkIfExist = _ucOnlinePortalContext.StudentRequests.Where(x => x.InternalCode == studentRequest.internal_code && x.StudId == studentRequest.id_number).FirstOrDefault();
+            var updateSubjectRequest = _ucOnlinePortalContext.RequestSchedules.Where(x => x.InternalCode == studentRequest.internal_code && x.Term == studentRequest.term).FirstOrDefault();
+            var checkIfExist = _ucOnlinePortalContext.StudentRequests.Where(x => x.InternalCode == studentRequest.internal_code && x.StudId == studentRequest.id_number && x.Term == studentRequest.term).FirstOrDefault();
 
             if (checkIfExist == null)
             {
                 StudentRequest studentSubjectRequest = new StudentRequest
                 {
                     StudId = studentRequest.id_number,
-                    InternalCode = studentRequest.internal_code
+                    InternalCode = studentRequest.internal_code,
+                    Term = studentRequest.term
                 };
+
+                var size = updateSubjectRequest.Size;
+                size += 1;
+                updateSubjectRequest.Size = size;
+                _ucOnlinePortalContext.RequestSchedules.Update(updateSubjectRequest);
+                _ucOnlinePortalContext.SaveChanges();
+
                 _ucOnlinePortalContext.StudentRequests.Add(studentSubjectRequest);
             }
 
@@ -8195,7 +8211,9 @@ namespace UCPortal.BusinessLogic.Enrollment
             var request = (from rsubjects in _ucOnlinePortalContext.RequestSchedules
                            join subject in _ucOnlinePortalContext.SubjectInfos
                            on rsubjects.InternalCode equals subject.InternalCode
-                           where subject.CourseCode == getRequest.course_code
+                           join course in _ucOnlinePortalContext.CourseLists
+                           on subject.CourseCode equals course.CourseCode
+                           where (rsubjects.Term == getRequest.term)
                            select new GetSubjectReqResponse.RequestedSubject
                            {
                                subject_name = rsubjects.SubjectName,
@@ -8205,11 +8223,15 @@ namespace UCPortal.BusinessLogic.Enrollment
                                time_end = rsubjects.TimeEnd,
                                mdn = rsubjects.Mdn,
                                days = rsubjects.Days,
+                               course_code = course.CourseCode,
+                               course_abbr = course.CourseAbbr,
+                               size = (int)rsubjects.Size,
                                rtype = Convert.ToInt32(rsubjects.Rtype), //added convert
                                m_time_start = rsubjects.MTimeStart,
                                m_time_end = rsubjects.MTimeEnd,
                                status = Convert.ToInt32(rsubjects.Status), // added convert
-                               internal_code = rsubjects.InternalCode
+                               internal_code = rsubjects.InternalCode,
+                               edp_code = rsubjects.EdpCode
                            }).ToList();
 
             return new GetSubjectReqResponse { request = request };
@@ -8225,7 +8247,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             var request = (from rsubjects in _ucOnlinePortalContext.RequestSchedules
                            join subject in _ucOnlinePortalContext.StudentRequests
                            on rsubjects.InternalCode equals subject.InternalCode
-                           where subject.StudId == getRequest.id_number
+                           where (subject.StudId == getRequest.id_number && rsubjects.Term == getRequest.term)
                            select new GetStudentReqResponse.RequestedSubject
                            {
                                subject_name = rsubjects.SubjectName,
@@ -8236,6 +8258,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                                rtype = Convert.ToInt32(rsubjects.Rtype), //added convert
                                m_time_start = rsubjects.MTimeStart,
                                m_time_end = rsubjects.MTimeEnd,
+                               size = (int)rsubjects.Size,
                                status = Convert.ToInt32(rsubjects.Status), //added convert
                                internal_code = rsubjects.InternalCode
                            }).ToList();
@@ -8243,7 +8266,7 @@ namespace UCPortal.BusinessLogic.Enrollment
             var studentInfo = _ucOnlinePortalContext.LoginInfos.Where(x => x.StudId == getRequest.id_number).FirstOrDefault();
 
             var filtered = (from subject in _ucOnlinePortalContext.SubjectInfos
-                            where subject.CourseCode == studentInfo.CourseCode
+                            where (subject.CourseCode == studentInfo.CourseCode && subject.SplitType == "S" && subject.CurriculumYear == studentInfo.CurrYear)
                             select new GetStudentReqResponse.FilteredSubject
                             {
                                 subject_name = subject.SubjectName,
@@ -8262,11 +8285,18 @@ namespace UCPortal.BusinessLogic.Enrollment
             if (getRequest == null)
                 return new AddStudentReqResponse { success = 0 };
 
+            var updateRequestedSubject = _ucOnlinePortalContext.RequestSchedules.Where(x=> x.Term == getRequest.term && x.InternalCode == getRequest.internal_code).FirstOrDefault();
+
             StudentRequest studentSubjectRequest = new StudentRequest
             {
                 StudId = getRequest.id_number,
-                InternalCode = getRequest.internal_code
+                InternalCode = getRequest.internal_code,
+                Term = getRequest.term
             };
+            var size = updateRequestedSubject.Size;
+            size += 1;
+            updateRequestedSubject.Size = size;
+            _ucOnlinePortalContext.RequestSchedules.Update(updateRequestedSubject);
             _ucOnlinePortalContext.StudentRequests.Add(studentSubjectRequest);
             _ucOnlinePortalContext.SaveChanges();
 
@@ -8278,8 +8308,20 @@ namespace UCPortal.BusinessLogic.Enrollment
             if (getRequest == null)
                 return new CancelSubjectReqResponse { success = 0 };
 
-            var findTmpLogin = _ucOnlinePortalContext.StudentRequests.Where(x => x.StudId == getRequest.id_number && x.InternalCode == getRequest.internal_code).FirstOrDefault();
+            var findTmpLogin = _ucOnlinePortalContext.StudentRequests.Where(x => x.StudId == getRequest.id_number && x.InternalCode == getRequest.internal_code && x.Term == getRequest.term).FirstOrDefault();
             _ucOnlinePortalContext.StudentRequests.Remove(findTmpLogin);
+            var getStudentRequest = _ucOnlinePortalContext.RequestSchedules.Where(x => x.InternalCode == getRequest.internal_code && x.Term == getRequest.term).FirstOrDefault();
+            var size = getStudentRequest.Size;
+            size -= 1;
+            getStudentRequest.Size = size;
+            if (size == 0)
+            {
+                //var getSubjectRequest = _ucOnlinePortalContext.RequestSchedules
+                _ucOnlinePortalContext.RequestSchedules.Remove(getStudentRequest);
+            }
+            else {
+                _ucOnlinePortalContext.RequestSchedules.Update(getStudentRequest);
+            }
             _ucOnlinePortalContext.SaveChanges();
 
             return new CancelSubjectReqResponse { success = 1 };
@@ -8764,6 +8806,112 @@ namespace UCPortal.BusinessLogic.Enrollment
             return new ViewStudentDeanEvaluationResponse { students = result.ToList(), count = count };
         }
 
+        public GetStudentListResponse GetStudentList (GetStudentListRequest getRequest)
+        {
+            var getStudentList = (from studentrequest in _ucOnlinePortalContext.StudentRequests
+                                  join logininfo in _ucOnlinePortalContext.LoginInfos
+                                  on studentrequest.StudId equals logininfo.StudId
+                                  join courselist in _ucOnlinePortalContext.CourseLists
+                                  on logininfo.CourseCode equals courselist.CourseCode
+                                  where (studentrequest.InternalCode == getRequest.internal_code && studentrequest.Term == getRequest.term)
+                                  select new GetStudentListResponse.Students
+                                  { 
+                                    id_number = studentrequest.StudId,
+                                    firstname = logininfo.FirstName,
+                                    lastname = logininfo.LastName,
+                                    course = courselist.CourseAbbr,
+                                    year = (int)logininfo.Year,
+                                    contact = logininfo.MobileNumber,
+                                    fb = logininfo.Facebook,
+                                    email = logininfo.Email
+                                  }).ToList();
+
+            return new GetStudentListResponse { students = getStudentList};
+        }
+
+        public static string GenerateNumeric()
+        {
+            const string chars = "0123456789";
+            return new string(Enumerable.Repeat(chars, 5)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        public bool checkEDPCode(string edp_code)
+        {
+            bool found = false;
+            var check212schedule = _ucOnlinePortalContext._212schedules.Where(x => x.EdpCode == edp_code).FirstOrDefault();
+            var checkschedule = _ucOnlinePortalContext.Schedules.Where(x => x.EdpCode == edp_code).FirstOrDefault();
+
+            if (check212schedule != null && checkschedule != null)
+                found = true;
+
+            return found;
+        }
+        public string GenerateEDPCode()
+        {
+            string newCode = GenerateNumeric();
+
+            if (checkEDPCode(newCode))
+            {
+                return GenerateEDPCode();
+            }
+
+            return newCode;
+        }
+
+        public UpdateRequestScheduleStatusResponse UpdateRequestStatus (UpdateRequestScheduleStatusRequest getRequest)
+        {
+            if (getRequest == null)
+                return new UpdateRequestScheduleStatusResponse { success = 0 };
+            var updateRequest = _ucOnlinePortalContext.RequestSchedules.Where(x => x.InternalCode == getRequest.internal_code && x.Term == getRequest.term).FirstOrDefault();
+            var status = updateRequest.Status;
+            status += 1;
+
+            var edpcode = GenerateEDPCode();
+
+            if (status == 3)
+            {
+                var getSubjectInfo = _ucOnlinePortalContext.SubjectInfos.Where(x => x.InternalCode == getRequest.internal_code).FirstOrDefault();
+                Schedule sched = new Schedule
+                {
+                    EdpCode = edpcode,
+                    Description = getSubjectInfo.SubjectName,
+                    InternalCode = getRequest.internal_code,
+                    SubType = getSubjectInfo.SubjectType,
+                    Units = getSubjectInfo.Units,
+                    TimeStart = updateRequest.TimeStart,
+                    TimeEnd = updateRequest.TimeEnd,
+                    Mdn = updateRequest.Mdn,
+                    Days = updateRequest.Days,
+                    MTimeStart = updateRequest.MTimeStart,
+                    MTimeEnd = updateRequest.MTimeEnd,
+                    MDays = "XX",
+                    Size = 0,
+                    PendingEnrolled = 0,
+                    OfficialEnrolled = 0,
+                    MaxSize = 20,
+                    Instructor = "",
+                    CourseCode = getSubjectInfo.CourseCode,
+                    Section = "",
+                    Room = "ONLINE",
+                    Instructor2 = "",
+                    Deployed = 1,
+                    Status = 1,
+                    SplitType = "",
+                    SplitCode = "",
+                    //IsGened = 0,
+                    ActiveTerm = getRequest.term
+                };
+                _ucOnlinePortalContext.Schedules.Add(sched);
+
+            }
+            //Insert to table
+            updateRequest.Status = status;
+            updateRequest.EdpCode = edpcode;
+            _ucOnlinePortalContext.RequestSchedules.Update(updateRequest);
+            _ucOnlinePortalContext.SaveChanges();
+            return new UpdateRequestScheduleStatusResponse { success = 1 };
+        }
+        
 
     }    
 }

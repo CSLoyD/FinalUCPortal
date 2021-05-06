@@ -21,5 +21,7 @@ namespace UCPortal.DatabaseEntities.Models
         public int? Size { get; set; }
         public string SplitType { get; set; }
         public string SplitCode { get; set; }
+        public string Term { get; set; }
+        public string EdpCode { get; set; }
     }
 }

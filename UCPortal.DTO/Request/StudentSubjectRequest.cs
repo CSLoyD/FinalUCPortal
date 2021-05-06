@@ -16,5 +16,6 @@ namespace UCPortal.DTO.Request
         public string days { get; set; }
         public int rtype { get; set; }
         public string id_number { get; set; }
+        public string term { get;set; }
     }
 }

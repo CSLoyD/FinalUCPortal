@@ -16,11 +16,15 @@ namespace UCPortal.DTO.Response
             public string time_end { get; set; }
             public string mdn { get; set; }
             public string days { get; set; }
+            public int size { get; set; }
             public int rtype { get; set; }
             public string m_time_start { get; set; }
             public string m_time_end { get; set; }
             public int status { get; set; }
             public string internal_code { get; set; }
+            public string course_code { get; set; }
+            public string course_abbr { get; set; }
+            public string edp_code { get; set; }
         }
     }
 }
