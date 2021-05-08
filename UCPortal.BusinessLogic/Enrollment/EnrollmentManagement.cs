@@ -348,10 +348,18 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                 if (saveEnrollRequest.accept_section == 1)
                 {
-                    enrollmentData.Status = (short)EnrollmentStatus.APPROVED_BY_DEAN;
+                    enrollmentData.Status = (short)EnrollmentStatus.OFFICIALLY_ENROLLED;
                     enrollmentData.ApprovedDean = "AUTO-APPROVE";
                     enrollmentData.ApprovedDeanOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-                    enrollmentData.Status = (short)EnrollmentStatus.APPROVED_BY_DEAN;
+                    enrollmentData.Status = (short)EnrollmentStatus.OFFICIALLY_ENROLLED;
+
+                    //Auto Set for capstone
+                    enrollmentData.ApprovedAcctg = "AUTO-APPROVE";
+                    enrollmentData.ApprovedAcctgOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+                    enrollmentData.NeededPayment = 500;
+
+                    enrollmentData.ApprovedCashier = "AUTO-APPROVE";
+                    enrollmentData.ApprovedCashierOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
 
                     //Insert OSTSP if section is set by dean
                     var ostsp = _ucOnlinePortalContext.Ostsps.Where(x => x.StudId == saveEnrollRequest.id_number && x.Status != 2 && x.ActiveTerm == saveEnrollRequest.active_term).Select(x => x.EdpCode).ToList();
@@ -8109,7 +8117,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                               final_grade = grade.FinalGrade
                           }).ToList();
 
-            var schedules = (from schedule in _ucOnlinePortalContext._212schedules
+            var schedules = (from schedule in _ucOnlinePortalContext.Schedules
                              join subject_info in _ucOnlinePortalContext.SubjectInfos
                              on schedule.InternalCode equals subject_info.InternalCode
                              join curriculum in _ucOnlinePortalContext.Curricula
@@ -8911,7 +8919,65 @@ namespace UCPortal.BusinessLogic.Enrollment
             _ucOnlinePortalContext.SaveChanges();
             return new UpdateRequestScheduleStatusResponse { success = 1 };
         }
-        
 
+        public GetStudentGradesResponse GetStudentGrades(GetStudentGradesRequest getStudentGrades)
+        {
+            if (getStudentGrades.id_number == null || getStudentGrades.internal_code == null)
+                return new GetStudentGradesResponse { };
+
+            
+            //var checkIfExist = _ucOnlinePortalContext.GradeEvaluations.Where(x=> x.IntCode == getStudentGrades.internal_code && getStudentGrades.id_number == x.StudId).FirstOrDefault();
+
+
+            var grades = (from grade_evaluation in _ucOnlinePortalContext.GradeEvaluations
+                      where (getStudentGrades.internal_code == grade_evaluation.IntCode && getStudentGrades.id_number == grade_evaluation.StudId)
+                      select new GetStudentGradesResponse.Grades
+                      {
+                          id_number = grade_evaluation.StudId,
+                          internal_code = grade_evaluation.IntCode,
+                          mid_grade = grade_evaluation.MidtermGrade,
+                          final_grade = grade_evaluation.FinalGrade,
+                      }).ToList();
+
+
+            var equivalence = (from equivalences in _ucOnlinePortalContext.Equivalences
+                               join grade_evaluation in _ucOnlinePortalContext.GradeEvaluations
+                               on equivalences.EquivalCode equals grade_evaluation.IntCode
+                               where equivalences.InternalCode == getStudentGrades.internal_code
+                               select new GetStudentGradesResponse.Equivalence
+                               {
+                                   internal_code = equivalences.InternalCode,
+                                   equival_code = equivalences.EquivalCode,
+                                   mid_grade = grade_evaluation.MidtermGrade,
+                                   final_grade = grade_evaluation.FinalGrade
+                               }).ToList();
+
+            return new GetStudentGradesResponse { grades = grades , equivalence = equivalence};
+        }
+
+        public SetGradeEvaluationResponse SetGradeEvaluation(SetGradeEvaluationRequest setGradeEvaluation)
+        {
+            GradeEvaluation grade_evaluation = new GradeEvaluation
+            {
+                IntCode = setGradeEvaluation.internal_code,
+                StudId = setGradeEvaluation.id_number,
+                FinalGrade = setGradeEvaluation.grade,
+                Term =setGradeEvaluation.term
+            };
+            _ucOnlinePortalContext.GradeEvaluations.Add(grade_evaluation);
+            _ucOnlinePortalContext.SaveChanges();
+
+            return new SetGradeEvaluationResponse { success = 1};
+        }
+
+        public SetStatusEvaluationResponse SetStatusEvaluation(SetStatusEvaluationRequest setStatusEvaluation)
+        {
+            var getStudentInfo = _ucOnlinePortalContext.Oenrps.Where(x=> x.StudId == setStatusEvaluation.id_number && x.ActiveTerm == setStatusEvaluation.term).FirstOrDefault();
+            getStudentInfo.Status = (short)RequestResponse.Enums.EnrollmentStatus.APPROVED_REGISTRATION_REGISTRAR;
+            _ucOnlinePortalContext.Update(getStudentInfo);
+            _ucOnlinePortalContext.SaveChanges();
+
+            return new SetStatusEvaluationResponse { success = 1 };
+        }
     }    
 }

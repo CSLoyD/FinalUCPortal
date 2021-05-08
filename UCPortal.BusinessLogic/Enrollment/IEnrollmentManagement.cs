@@ -105,5 +105,8 @@ namespace UCPortal.BusinessLogic.Enrollment
         ViewStudentDeanEvaluationResponse ViewStudentEvaluation(ViewStudentDeanEvaluationRequest viewStudentDeanEvaluationRequest);
         GetStudentListResponse GetStudentList(GetStudentListRequest getRequest);
         UpdateRequestScheduleStatusResponse UpdateRequestStatus(UpdateRequestScheduleStatusRequest getRequest);
+        GetStudentGradesResponse GetStudentGrades(GetStudentGradesRequest getStudentGrades);
+        SetGradeEvaluationResponse SetGradeEvaluation(SetGradeEvaluationRequest setGradeEvaluation);
+        SetStatusEvaluationResponse SetStatusEvaluation(SetStatusEvaluationRequest setStatusEvaluation);
     }
 }

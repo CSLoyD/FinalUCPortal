@@ -687,7 +687,7 @@ namespace UCPortal.Controllers
                 return Ok(new UploadImageResponse { success = 0 });
             }
 
-            string path = "C:\\Users\\james\\Documents\\My Web Sites\\ucportal\\src";
+            string path = "D:\\Upload";
             foreach (var formFile in request.formFiles)
             {
                 if (formFile.Length > 0)
@@ -2297,6 +2297,80 @@ namespace UCPortal.Controllers
 
 
             return Ok(new UpdateRequestScheduleStatusResponse { success = result.success });
+        }
+
+        [HttpPost]
+        [Route("student/getstudentgrades")]
+        public async Task<IActionResult> GetStudentGrades([FromBody] GetStudentGradesRequest request)
+        {
+            //Check if required fields are present
+            if (!ModelState.IsValid)
+            {
+                return Ok(new GetStudentGradesResponse { });
+            }
+
+            //Convert response object to DTO Objectscourses
+            var serialized_req = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            var converted_req = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.Request.GetStudentGradesRequest>(serialized_req);
+
+            //await result from function ChangePassword
+            var result = await Task.FromResult(_enrollmentManagement.GetStudentGrades(converted_req));
+
+            var grade = result.grades.Select(x =>
+            {
+                var rSched = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+                var cSched = Newtonsoft.Json.JsonConvert.DeserializeObject<GetStudentGradesResponse.Grades>(rSched);
+                return cSched;
+            }).ToList();
+
+            var equivalences = result.equivalence.Select(x =>
+            {
+                var rSched = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+                var cSched = Newtonsoft.Json.JsonConvert.DeserializeObject<GetStudentGradesResponse.Equivalence>(rSched);
+                return cSched;
+            }).ToList();
+
+            return Ok(new GetStudentGradesResponse { grades = grade, equivalence = equivalences });
+        }
+
+        [HttpPost]
+        [Route("student/setstudentgrades")]
+        public async Task<IActionResult> SetGradeEvaluation ([FromBody] SetGradeEvaluationRequest request)
+        {
+            //Check if required fields are present
+            if (!ModelState.IsValid)
+            {
+                return Ok(new GetStudentGradesResponse { });
+            }
+
+            //Convert response object to DTO Objectscourses
+            var serialized_req = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            var converted_req = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.Request.SetGradeEvaluationRequest>(serialized_req);
+
+            //await result from function ChangePassword
+            var result = await Task.FromResult(_enrollmentManagement.SetGradeEvaluation(converted_req));
+
+            return Ok(new SetGradeEvaluationResponse { success = result.success });
+        }
+
+        [HttpPost]
+        [Route("student/setstatusevaluation")]
+        public async Task<IActionResult> SetStatusEvaluation([FromBody] SetStatusEvaluationRequest request)
+        {
+            //Check if required fields are present
+            if (!ModelState.IsValid)
+            {
+                return Ok(new SetStatusEvaluationResponse { success = 0 });
+            }
+
+            //Convert response object to DTO Objectscourses
+            var serialized_req = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            var converted_req = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.Request.SetStatusEvaluationRequest>(serialized_req);
+
+            //await result from function ChangePassword
+            var result = await Task.FromResult(_enrollmentManagement.SetStatusEvaluation(converted_req));
+
+            return Ok(new SetGradeEvaluationResponse { success = result.success });
         }
     }
 }
