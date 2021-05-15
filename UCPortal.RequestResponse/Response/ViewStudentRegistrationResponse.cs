@@ -73,6 +73,7 @@ namespace UCPortal.RequestResponse.Response
 
         public int request_deblock { get; set; }
         public int request_overload { get; set; }
+        public int curr_year { get; set; }
         public List<attachment> attachments { get; set; }
 
         public class attachment

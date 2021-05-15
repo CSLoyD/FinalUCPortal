@@ -348,7 +348,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                 if (saveEnrollRequest.accept_section == 1)
                 {
-                    enrollmentData.Status = (short)EnrollmentStatus.OFFICIALLY_ENROLLED;
+                    /*enrollmentData.Status = (short)EnrollmentStatus.OFFICIALLY_ENROLLED;
                     enrollmentData.ApprovedDean = "AUTO-APPROVE";
                     enrollmentData.ApprovedDeanOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
                     enrollmentData.Status = (short)EnrollmentStatus.OFFICIALLY_ENROLLED;
@@ -360,7 +360,11 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                     enrollmentData.ApprovedCashier = "AUTO-APPROVE";
                     enrollmentData.ApprovedCashierOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-
+                    */
+                    //*enrollmentData.Status = (short)EnrollmentStatus.APPROVED_BY_DEAN;
+                    enrollmentData.ApprovedDean = "AUTO-APPROVE";
+                    enrollmentData.ApprovedDeanOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+                    enrollmentData.Status = (short)EnrollmentStatus.APPROVED_BY_DEAN;
                     //Insert OSTSP if section is set by dean
                     var ostsp = _ucOnlinePortalContext.Ostsps.Where(x => x.StudId == saveEnrollRequest.id_number && x.Status != 2 && x.ActiveTerm == saveEnrollRequest.active_term).Select(x => x.EdpCode).ToList();
 
@@ -1292,7 +1296,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                               has_payment = _ucOnlinePortalContext.Attachments.Where(x => x.StudId == Oenrp.StudId && x.Type.Equals("Payment") && x.ActiveTerm == viewStudentPerStatusRequest.active_term).Take(1).Count(),
                               has_promissory = _ucOnlinePortalContext.Oenrps.Where(x => x.StudId == Oenrp.StudId && x.RequestPromissory == 3 && x.ActiveTerm == viewStudentPerStatusRequest.active_term).Count(),
                               profile = _ucOnlinePortalContext.Attachments.Where(x => x.StudId == Oenrp.StudId && x.Type == "2x2 ID Picture" && x.ActiveTerm == viewStudentPerStatusRequest.active_term).Select(x => x.Filename).FirstOrDefault(),
-                              enrollmentDate = Oenrp.EnrollmentDate
+                              enrollmentDate = Oenrp.EnrollmentDate,
+                             // curr_year = _loginInfo.CurrYear == null ?  0: (short)_loginInfo.CurrYear
                           });
 
             if (viewStudentPerStatusRequest.status == 99)
@@ -1524,7 +1529,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                 col_last_year = schooInfo.ColLastYear.HasValue ? (short)schooInfo.ColLastYear : 0,
                 attachments = attach,
                 request_overload = (short)studOenrp.RequestOverload,
-                request_deblock = (short)studOenrp.RequestDeblock
+                request_deblock = (short)studOenrp.RequestDeblock,
+                curr_year = loginInfo.CurrYear == null ? 0:(int)loginInfo.CurrYear
             };
 
             return registrationResponse;
@@ -3911,6 +3917,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 oldStudInfo.gender = studLogin.Sex;
                 oldStudInfo.birthdate = studLogin.Birthdate.ToString();
                 oldStudInfo.is_verified = (short)studLogin.IsVerified;
+                oldStudInfo.curr_year = studLogin.CurrYear == null ? 0 : (int)studLogin.CurrYear;
             }
 
             if (studOenrp != null)
@@ -8122,7 +8129,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                              on schedule.InternalCode equals subject_info.InternalCode
                              join curriculum in _ucOnlinePortalContext.Curricula
                              on subject_info.CurriculumYear equals curriculum.Year
-                             where curriculum.IsDeployed == 1
+                             where (curriculum.IsDeployed == 1 && schedule.ActiveTerm == getCurriculumRequest.term)
                              select new GetCurriculumResponse.Schedules
                              {
                                  internal_code = schedule.InternalCode,
@@ -8479,53 +8486,57 @@ namespace UCPortal.BusinessLogic.Enrollment
                             Semester = Convert.ToInt16(subjects.semester),
                             CourseCode = getRequest.course,
                             YearLevel = subjects.year,
-                            SplitType = "C",
+                            SplitType = subjects.lec != 0 ? "C":"S",
                             CurriculumYear = getRequest.curr_year
                         };
                         _ucOnlinePortalContext.SubjectInfos.Add(subjectInfoLab);
                         _ucOnlinePortalContext.SaveChanges();
                     }
 
-                    var getInternalCodeLab = _ucOnlinePortalContext.SubjectInfos.Where(x => x.CurriculumYear == getRequest.curr_year && x.SubjectName == subjects.subject && x.SplitType == "C").FirstOrDefault();
-                    string internal_code = null;
-                    if (getInternalCodeLab != null)
+                    if (subjects.lec != 0)
                     {
-                        internal_code = getInternalCodeLab.InternalCode;
-                    }
-                    // save lecture to subject_info
-                    SubjectInfo subjectInfo = new SubjectInfo
-                    {
-                        InternalCode = GenerateInternalCode(getRequest.course),
-                        SubjectName = subjects.subject,
-                        SubjectType = null,
-                        Descr1 = subjects.description,
-                        Descr2 = null,
-                        Units = Convert.ToInt16(subjects.lec),
-                        Semester = Convert.ToInt16(subjects.semester),
-                        CourseCode = getRequest.course,
-                        YearLevel = subjects.year,
-                        SplitType = "S",
-                        CurriculumYear = getRequest.curr_year,
-                        SplitCode = internal_code
-                    };
-
-                    _ucOnlinePortalContext.SubjectInfos.Add(subjectInfo);
-                    _ucOnlinePortalContext.SaveChanges();
-
-                    if (subjects.lab != 0)
-                    {
-                        var getLab = _ucOnlinePortalContext.SubjectInfos.Where(x => x.SubjectName == subjects.subject && x.CurriculumYear == getRequest.curr_year && x.SubjectType == "L").FirstOrDefault();
-                        var updateSubject = _ucOnlinePortalContext.SubjectInfos.Where(x => x.CurriculumYear == getRequest.curr_year && x.SubjectName == subjects.subject && x.SplitType == "S").FirstOrDefault();
-                        if (getLab == null)
+                        var getInternalCodeLab = _ucOnlinePortalContext.SubjectInfos.Where(x => x.CurriculumYear == getRequest.curr_year && x.SubjectName == subjects.subject && x.SplitType == "C" && x.CourseCode == getRequest.course).FirstOrDefault();
+                        string internal_code = null;
+                        if (getInternalCodeLab != null)
                         {
-                            return new AddCurriculumResponse { success = 0 };
+                            internal_code = getInternalCodeLab.InternalCode;
                         }
-                        updateSubject.SplitCode = getLab.InternalCode;
-                        getLab.SplitCode = updateSubject.InternalCode;
+                        // save lecture to subject_info
+                        SubjectInfo subjectInfo = new SubjectInfo
+                        {
+                            InternalCode = GenerateInternalCode(getRequest.course),
+                            SubjectName = subjects.subject,
+                            SubjectType = null,
+                            Descr1 = subjects.description,
+                            Descr2 = null,
+                            Units = Convert.ToInt16(subjects.lec),
+                            Semester = Convert.ToInt16(subjects.semester),
+                            CourseCode = getRequest.course,
+                            YearLevel = subjects.year,
+                            SplitType = "S",
+                            CurriculumYear = getRequest.curr_year,
+                            SplitCode = internal_code
+                        };
 
-
-                        _ucOnlinePortalContext.SubjectInfos.Update(updateSubject);
+                        _ucOnlinePortalContext.SubjectInfos.Add(subjectInfo);
                         _ucOnlinePortalContext.SaveChanges();
+
+                        if (subjects.lab != 0)
+                        {
+                            var getLab = _ucOnlinePortalContext.SubjectInfos.Where(x => x.SubjectName == subjects.subject && x.CurriculumYear == getRequest.curr_year && x.SubjectType == "L").FirstOrDefault();
+                            var updateSubject = _ucOnlinePortalContext.SubjectInfos.Where(x => x.CurriculumYear == getRequest.curr_year && x.SubjectName == subjects.subject && x.SplitType == "S").FirstOrDefault();
+                            if (getLab == null)
+                            {
+                                return new AddCurriculumResponse { success = 0 };
+                            }
+                            updateSubject.SplitCode = getLab.InternalCode;
+                            getLab.SplitCode = updateSubject.InternalCode;
+
+
+                            _ucOnlinePortalContext.SubjectInfos.Update(updateSubject);
+                            _ucOnlinePortalContext.SaveChanges();
+                        }
+
                     }
                 }
                 else

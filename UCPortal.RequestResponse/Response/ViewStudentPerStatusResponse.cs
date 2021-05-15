@@ -28,6 +28,7 @@ namespace UCPortal.RequestResponse.Response
             public int has_promissory { get; set; }
             public int promi_pay { get; set; }
             public string profile { get; set; }
+            //public int curr_year { get; set; }
         }
     }
 }
