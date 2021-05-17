@@ -16,5 +16,6 @@ namespace UCPortal.RequestResponse.Request
         public string classification { get; set; }
         public int allowed_units { get; set; }
         public string active_term { get; set; }
+        public int curr_year { get; set; }
     }
 }

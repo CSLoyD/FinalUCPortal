@@ -1545,6 +1545,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
         public SetApproveOrDisapprovedResponse SetApproveOrDisapprove(SetApproveOrDisapprovedRequest setApproveOrDisapprovedRequest)
         {
+            var studentEvaluation = _ucOnlinePortalContext.GradeEvaluations.Where(x=> x.StudId == setApproveOrDisapprovedRequest.id_number).FirstOrDefault();
             var studentOenrp = _ucOnlinePortalContext.Oenrps.Where(x => x.StudId == setApproveOrDisapprovedRequest.id_number && x.ActiveTerm == setApproveOrDisapprovedRequest.active_term).FirstOrDefault();
             var studentLogin = _ucOnlinePortalContext.LoginInfos.Where(x => x.StudId == setApproveOrDisapprovedRequest.id_number).FirstOrDefault();
             var studentInfo = _ucOnlinePortalContext.StudentInfos.Where(x => x.StudId == setApproveOrDisapprovedRequest.id_number && x.ActiveTerm == setApproveOrDisapprovedRequest.active_term).FirstOrDefault();
@@ -1639,6 +1640,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     studentOenrp.StudId = idNumber;
                     studentLogin.StudId = idNumber;
                     studentInfo.StudId = idNumber;
+                    studentEvaluation.StudId = idNumber;
 
 
                     if (studentAttachment != null)
@@ -1712,6 +1714,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     studentOenrp.StudId = idNumber;
                     studentLogin.StudId = idNumber;
                     studentInfo.StudId = idNumber;
+                    studentEvaluation.StudId = idNumber;
 
                     if (studentAttachment != null)
                     {
@@ -4508,6 +4511,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 loginInfo.Dept = updateInforRequest.dept;
                 loginInfo.CourseCode = updateInforRequest.course_code;
                 loginInfo.AllowedUnits = (short)updateInforRequest.allowed_units;
+                loginInfo.CurrYear = (short)updateInforRequest.curr_year;
 
                 _ucOnlinePortalContext.LoginInfos.Update(loginInfo);
                 _ucOnlinePortalContext.SaveChanges();
