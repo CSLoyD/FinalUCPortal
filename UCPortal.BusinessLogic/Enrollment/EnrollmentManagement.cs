@@ -179,7 +179,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     Units = 0,
                     Classification = registrationRequest.student_info.classification,
                     Dept = registrationRequest.student_info.dept,
-                    Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" || registrationRequest.student_info.classification == "R" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED,
+                    Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" || registrationRequest.student_info.classification == "R" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.APPROVED_REGISTRATION_REGISTRAR,
                     AdjustmentCount = 1,
                     RequestDeblock = 0,
                     RequestOverload = 0,
@@ -207,9 +207,10 @@ namespace UCPortal.BusinessLogic.Enrollment
                 {
                     newStudentOenrp.ApprovedRegRegistrar = "AUTO-APPROVE";
                     newStudentOenrp.ApprovedRegRegistrarOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-                    newStudentOenrp.Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" || registrationRequest.student_info.classification == "R" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED;
+                    newStudentOenrp.Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" || registrationRequest.student_info.classification == "R" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.APPROVED_REGISTRATION_REGISTRAR;
                 }
 
+                var latest_cur = _ucOnlinePortalContext.Curricula.Max(x => x.Year);
 
                 //Insert new record to loginInfo but with No Id Numbers first
                 LoginInfo newLogin = new LoginInfo
@@ -233,7 +234,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                     IsBlocked = 0,
                     AllowedUnits = 0,
                     UserType = "STUDENT",
-                    Token = token
+                    Token = token,
+                    CurrYear = registrationRequest.student_info.classification == "H" ? latest_cur: 0
                 };
 
                 //Save Login Info
@@ -8070,7 +8072,13 @@ namespace UCPortal.BusinessLogic.Enrollment
                 //return empty data
                 return new GetCurriculumResponse { };
             }
-            /* 
+           int studentStatus = 0;
+            var status = _ucOnlinePortalContext.Oenrps.Where(x=> x.StudId == getCurriculumRequest.id_number && x.ActiveTerm == getCurriculumRequest.term).FirstOrDefault();
+            if (status == null)
+                studentStatus = 0;
+            else
+                studentStatus = status.Status;
+            /*
              if (getLoginInfo.CurrYear == null)
                  return new GetCurriculumResponse { };
             */
@@ -8150,7 +8158,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                              }).ToList();
 
             //var subjects = getStudentCourse.CourseCode;
-            return new GetCurriculumResponse { success = 1,dept = getLoginInfo.Dept, subjects = subjects, requisites = remarks, grades = grades, schedules = schedules, units = getUnits, curr_year = curr_year };
+            return new GetCurriculumResponse { success = 1,dept = getLoginInfo.Dept,status = 0, subjects = subjects, requisites = remarks, grades = grades, schedules = schedules, units = getUnits, curr_year = curr_year };
         }
         public GetCurriculumBEResponse GetCurriculumBE(GetCurriculumBERequest getCurriculumRequest)  //id_number
         {
@@ -8164,6 +8172,12 @@ namespace UCPortal.BusinessLogic.Enrollment
                 //return empty data
                 return new GetCurriculumBEResponse { };
             }
+            int studentStatus = 0;
+            var status = _ucOnlinePortalContext.Oenrps.Where(x => x.StudId == getCurriculumRequest.id_number && x.ActiveTerm == getCurriculumRequest.term).FirstOrDefault();
+            if (status == null)
+                studentStatus = 0;
+            else
+                studentStatus = status.Status;
             /* 
              if (getLoginInfo.CurrYear == null)
                  return new GetCurriculumResponse { };
@@ -8245,7 +8259,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                              }).ToList();
 
             //var subjects = getStudentCourse.CourseCode;
-            return new GetCurriculumBEResponse { success = 1, dept = getLoginInfo.Dept, subjects = subjects, requisites = remarks, grades = grades, schedules = schedules, units = getUnits, curr_year = curr_year };
+            return new GetCurriculumBEResponse { success = 1,status=studentStatus, dept = getLoginInfo.Dept, subjects = subjects, requisites = remarks, grades = grades, schedules = schedules, units = getUnits, curr_year = curr_year };
         }
         public StudentSubjectResponse RequestSubject(StudentSubjectRequest studentRequest)  //id_number
         {

@@ -1893,7 +1893,7 @@ namespace UCPortal.Controllers
             }).ToList();
             
 
-            return Ok(new GetCurriculumResponse { success = result.success,dept = result.dept, subjects = response, course_code = result.course_code, requisites = remark, grades = grades, schedules = schedules, units = result.units, curr_year = result.curr_year });
+            return Ok(new GetCurriculumResponse { success = result.success,status=result.status, dept = result.dept, subjects = response, course_code = result.course_code, requisites = remark, grades = grades, schedules = schedules, units = result.units, curr_year = result.curr_year });
         }
         [HttpPost]
         [Route("student/prospectusbe")]
@@ -1939,7 +1939,7 @@ namespace UCPortal.Controllers
             }).ToList();
 
 
-            return Ok(new GetCurriculumBEResponse { success = result.success, dept = result.dept, subjects = response, course_code = result.course_code, requisites = remark, grades = grades, schedules = schedules, units = result.units, curr_year = result.curr_year });
+            return Ok(new GetCurriculumBEResponse { success = result.success,status=result.status, dept = result.dept, subjects = response, course_code = result.course_code, requisites = remark, grades = grades, schedules = schedules, units = result.units, curr_year = result.curr_year });
         }
         [HttpPost]
         [Route("student/requestsubject")]

@@ -15,6 +15,7 @@ namespace UCPortal.RequestResponse.Response
         public int units { get; set; }
         public List<Schedules> schedules { get; set; }
         public int curr_year { get; set; }
+        public int status { get; set; }
         public class Subjects
         {
             public string internal_code { get; set; }
