@@ -8139,6 +8139,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                              on schedule.InternalCode equals subject_info.InternalCode
                              join curriculum in _ucOnlinePortalContext.Curricula
                              on subject_info.CurriculumYear equals curriculum.Year
+                             join course in _ucOnlinePortalContext.CourseLists
+                             on subject_info.CourseCode equals course.CourseCode
                              where (curriculum.IsDeployed == 1 && schedule.ActiveTerm == getCurriculumRequest.term)
                              select new GetCurriculumResponse.Schedules
                              {
@@ -8154,7 +8156,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                                  split_code = schedule.SplitCode,
                                  course_code = schedule.CourseCode,
                                  section = schedule.Section,
-                                 room = schedule.Room
+                                 room = schedule.Room,
+                                 course = course.CourseAbbr
                              }).ToList();
 
             //var subjects = getStudentCourse.CourseCode;

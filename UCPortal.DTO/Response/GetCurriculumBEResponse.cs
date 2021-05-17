@@ -62,6 +62,7 @@ namespace UCPortal.DTO.Response
             public string course_code { get; set; }
             public string section { get; set; }
             public string room { get; set; }
+            public string course { get; set; }
         }
     }
 
