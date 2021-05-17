@@ -4,8 +4,8 @@ using System.Text;
 
 namespace UCPortal.DTO.Request
 {
-    public class GetStudentGradesRequest
+    public class GetEquivalenceSchedulesRequest
     {
-        public string id_number { get; set; }
+        public string internal_code { get; set; }
     }
 }

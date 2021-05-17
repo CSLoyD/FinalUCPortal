@@ -211,6 +211,7 @@ namespace UCPortal.BusinessLogic.Login
                 retLoginResponse.success = 1;
                 retLoginResponse.allowed_units = (int)user.AllowedUnits;
                 retLoginResponse.curr_year = user.CurrYear == null ? 0:(int)user.CurrYear;
+                retLoginResponse.dept = user.Dept;
                 retLoginResponse.id_number = user.StudId;
                 retLoginResponse.email = user.Email;
                 retLoginResponse.is_verified = (int)user.IsVerified;

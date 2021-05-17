@@ -8,6 +8,7 @@ namespace UCPortal.RequestResponse.Response
     {
         public int success { get; set; }
         public string course_code { get; set; }
+        public string dept { get; set; }
         public List<Subjects> subjects { get; set; }
         public List<Requisites> requisites { get; set; }
         public List<Grades> grades { get; set; }

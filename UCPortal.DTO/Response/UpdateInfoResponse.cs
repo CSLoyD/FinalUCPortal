@@ -14,5 +14,6 @@ namespace UCPortal.DTO.Response
         public string course_code { get; set; }
         public string classification { get; set; }
         public int allowed_units { get; set; }
+        public int curr_year { get; set; }
     }
 }

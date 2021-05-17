@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UCPortal.DTO.Response
+namespace UCPortal.RequestResponse.Response
 {
-    public class GetStudentGradesResponse
+    public class GetStudentGradesBEResponse
     {
         public List<Grades> grades { get; set; }
         public class Grades
-        {
+        { 
             public string internal_code { get; set; }
-            public int eval_id { get; set; }
-            public string subject_code { get; set; }
+            public string id_number { get; set; }
+            public string mid_grade { get; set; }
             public string final_grade { get; set; }
         }
 

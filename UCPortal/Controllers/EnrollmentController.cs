@@ -1893,7 +1893,53 @@ namespace UCPortal.Controllers
             }).ToList();
             
 
-            return Ok(new GetCurriculumResponse { success = result.success, subjects = response, course_code = result.course_code, requisites = remark, grades = grades, schedules = schedules, units = result.units, curr_year = result.curr_year });
+            return Ok(new GetCurriculumResponse { success = result.success,dept = result.dept, subjects = response, course_code = result.course_code, requisites = remark, grades = grades, schedules = schedules, units = result.units, curr_year = result.curr_year });
+        }
+        [HttpPost]
+        [Route("student/prospectusbe")]
+        public async Task<IActionResult> GetCurriculumBE([FromBody] GetCurriculumBERequest request)
+        {
+            //Convert response object to DTO Objects
+            var serialized_req = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            var converted_req = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.Request.GetCurriculumBERequest>(serialized_req);
+
+            //await result from function ChangePassword
+            var result = await Task.FromResult(_enrollmentManagement.GetCurriculumBE(converted_req));
+
+            // convert DTO to response
+            // convert DTO to response
+
+
+            var response = result.subjects.Select(x =>
+            {
+                var rSched = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+                var cSched = Newtonsoft.Json.JsonConvert.DeserializeObject<GetCurriculumBEResponse.Subjects>(rSched);
+                return cSched;
+            }).ToList();
+
+            var remark = result.requisites.Select(x =>
+            {
+                var rSched = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+                var cSched = Newtonsoft.Json.JsonConvert.DeserializeObject<GetCurriculumBEResponse.Requisites>(rSched);
+                return cSched;
+            }).ToList();
+
+            var grades = result.grades.Select(x =>
+            {
+                var rGrade = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+                var cGrade = Newtonsoft.Json.JsonConvert.DeserializeObject<GetCurriculumBEResponse.Grades>(rGrade);
+                return cGrade;
+            }).ToList();
+
+            var schedules = result.schedules.Select(x =>
+            {
+                var rSchedule = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+                var cSchedule = Newtonsoft.Json.JsonConvert.DeserializeObject<GetCurriculumBEResponse.Schedules>(rSchedule);
+                return cSchedule;
+            }).ToList();
+
+
+            return Ok(new GetCurriculumBEResponse { success = result.success, dept = result.dept, subjects = response, course_code = result.course_code, requisites = remark, grades = grades, schedules = schedules, units = result.units, curr_year = result.curr_year });
         }
         [HttpPost]
         [Route("student/requestsubject")]
@@ -2323,16 +2369,34 @@ namespace UCPortal.Controllers
                 return cSched;
             }).ToList();
 
-            var equivalences = result.equivalence.Select(x =>
+            return Ok(new GetStudentGradesResponse { grades = grade });
+        }
+        [HttpPost]
+        [Route("student/getstudentgradesbe")]
+        public async Task<IActionResult> GetStudentGradesBE([FromBody] GetStudentGradesBERequest request)
+        {
+            //Check if required fields are present
+            if (!ModelState.IsValid)
+            {
+                return Ok(new GetStudentGradesResponse { });
+            }
+
+            //Convert response object to DTO Objectscourses
+            var serialized_req = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            var converted_req = Newtonsoft.Json.JsonConvert.DeserializeObject<DTO.Request.GetStudentGradesBERequest>(serialized_req);
+
+            //await result from function ChangePassword
+            var result = await Task.FromResult(_enrollmentManagement.GetStudentGradesBE(converted_req));
+
+            var grade = result.grades.Select(x =>
             {
                 var rSched = Newtonsoft.Json.JsonConvert.SerializeObject(x);
-                var cSched = Newtonsoft.Json.JsonConvert.DeserializeObject<GetStudentGradesResponse.Equivalence>(rSched);
+                var cSched = Newtonsoft.Json.JsonConvert.DeserializeObject<GetStudentGradesBEResponse.Grades>(rSched);
                 return cSched;
             }).ToList();
 
-            return Ok(new GetStudentGradesResponse { grades = grade, equivalence = equivalences });
+            return Ok(new GetStudentGradesBEResponse { grades = grade });
         }
-
         [HttpPost]
         [Route("student/setstudentgrades")]
         public async Task<IActionResult> SetGradeEvaluation ([FromBody] SetGradeEvaluationRequest request)

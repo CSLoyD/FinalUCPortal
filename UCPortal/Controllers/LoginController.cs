@@ -75,6 +75,7 @@ namespace UCPortal.Controllers
                 loginResponse.classification = result.classification;
             }
             loginResponse.curr_year = result.curr_year;
+            loginResponse.dept = result.dept;
             loginResponse.allowed_units = result.allowed_units;
             loginResponse.token = token;
             loginResponse.profile = result.profile;

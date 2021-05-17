@@ -152,7 +152,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     {
                         StudId = stud_info_id.ToString(),
                         Email = attachment.email,
-                        Filename = attachment.filename,
+                        Filename = attachment.type == "2x2 ID Picture" ? "profile_pic.jpg" : attachment.type == "Transcript of Records" ? "tor.pdf" : attachment.filename,
                         Type = attachment.type,
                         Acknowledged = 0,
                         ActiveTerm = registrationRequest.active_term
@@ -179,7 +179,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     Units = 0,
                     Classification = registrationRequest.student_info.classification,
                     Dept = registrationRequest.student_info.dept,
-                    Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED,
+                    Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" || registrationRequest.student_info.classification == "R" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED,
                     AdjustmentCount = 1,
                     RequestDeblock = 0,
                     RequestOverload = 0,
@@ -207,7 +207,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 {
                     newStudentOenrp.ApprovedRegRegistrar = "AUTO-APPROVE";
                     newStudentOenrp.ApprovedRegRegistrarOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-                    newStudentOenrp.Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED;
+                    newStudentOenrp.Status = registrationRequest.student_info.classification == "S" || registrationRequest.student_info.classification == "T" || registrationRequest.student_info.classification == "R" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED;
                 }
 
 
@@ -231,6 +231,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                     Facebook = registrationRequest.address_contact.facebook,
                     IsVerified = 1,
                     IsBlocked = 0,
+                    AllowedUnits = 0,
                     UserType = "STUDENT",
                     Token = token
                 };
@@ -348,7 +349,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                 if (saveEnrollRequest.accept_section == 1)
                 {
-                    /*enrollmentData.Status = (short)EnrollmentStatus.OFFICIALLY_ENROLLED;
+                    enrollmentData.Status = (short)EnrollmentStatus.OFFICIALLY_ENROLLED;
                     enrollmentData.ApprovedDean = "AUTO-APPROVE";
                     enrollmentData.ApprovedDeanOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
                     enrollmentData.Status = (short)EnrollmentStatus.OFFICIALLY_ENROLLED;
@@ -360,11 +361,11 @@ namespace UCPortal.BusinessLogic.Enrollment
 
                     enrollmentData.ApprovedCashier = "AUTO-APPROVE";
                     enrollmentData.ApprovedCashierOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-                    */
-                    //*enrollmentData.Status = (short)EnrollmentStatus.APPROVED_BY_DEAN;
+                    
+                    /*enrollmentData.Status = (short)EnrollmentStatus.APPROVED_BY_DEAN;
                     enrollmentData.ApprovedDean = "AUTO-APPROVE";
                     enrollmentData.ApprovedDeanOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-                    enrollmentData.Status = (short)EnrollmentStatus.APPROVED_BY_DEAN;
+                    enrollmentData.Status = (short)EnrollmentStatus.APPROVED_BY_DEAN;*/
                     //Insert OSTSP if section is set by dean
                     var ostsp = _ucOnlinePortalContext.Ostsps.Where(x => x.StudId == saveEnrollRequest.id_number && x.Status != 2 && x.ActiveTerm == saveEnrollRequest.active_term).Select(x => x.EdpCode).ToList();
 
@@ -3727,7 +3728,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                 Units = 0,
                 Classification = updateStudentInfoRequest.classification,
                 Dept = updateStudentInfoRequest.dept,
-                Status = updateStudentInfoRequest.classification == "S" || updateStudentInfoRequest.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED,
+                Status = updateStudentInfoRequest.classification == "S" || updateStudentInfoRequest.classification == "T" || updateStudentInfoRequest.classification == "R" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.REGISTERED,
                 AdjustmentCount = 1,
                 RequestDeblock = 0,
                 RequestOverload = 0,
@@ -3758,7 +3759,7 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             studentOenrp.ApprovedRegRegistrar = "AUTO-APPROVE";
             studentOenrp.ApprovedRegRegistrarOn = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-            studentOenrp.Status = updateStudentInfoRequest.classification == "S" || updateStudentInfoRequest.classification == "T" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.APPROVED_REGISTRATION_REGISTRAR;
+            studentOenrp.Status = updateStudentInfoRequest.classification == "S" || updateStudentInfoRequest.classification == "T" || updateStudentInfoRequest.classification == "R" ? (short)EnrollmentStatus.SUBJECT_EVALUATION_BY_DEAN : (short)EnrollmentStatus.APPROVED_REGISTRATION_REGISTRAR;
 
             newNotification = new Notification
             {
@@ -4475,7 +4476,8 @@ namespace UCPortal.BusinessLogic.Enrollment
                     year_level = (short)loginInfo.Year,
                     dept = loginInfo.Dept,
                     course_code = loginInfo.CourseCode,
-                    allowed_units = loginInfo.AllowedUnits.HasValue ? loginInfo.AllowedUnits.Value : 0
+                    allowed_units = loginInfo.AllowedUnits.HasValue ? loginInfo.AllowedUnits.Value : 0,
+                    curr_year = loginInfo.CurrYear.HasValue ? (int)loginInfo.CurrYear : 0
                 };
 
                 var classification = _ucOnlinePortalContext.Oenrps.Where(x => x.StudId == updateInfoRequest.stud_id && x.ActiveTerm == updateInfoRequest.active_term).FirstOrDefault();
@@ -8148,9 +8150,103 @@ namespace UCPortal.BusinessLogic.Enrollment
                              }).ToList();
 
             //var subjects = getStudentCourse.CourseCode;
-            return new GetCurriculumResponse { success = 1, subjects = subjects, requisites = remarks, grades = grades, schedules = schedules, units = getUnits, curr_year = curr_year };
+            return new GetCurriculumResponse { success = 1,dept = getLoginInfo.Dept, subjects = subjects, requisites = remarks, grades = grades, schedules = schedules, units = getUnits, curr_year = curr_year };
         }
+        public GetCurriculumBEResponse GetCurriculumBE(GetCurriculumBERequest getCurriculumRequest)  //id_number
+        {
+            //var getStudentInfo = _ucOnlinePortalContext._212studentInfos.Where(x => x.StudId == getCurriculumRequest.id_number).FirstOrDefault();
+            //check if the the data exist
+            //var need to get active term
+            //var getEnrollmentTerm = _ucOnlinePortalContext.
+            var getLoginInfo = _ucOnlinePortalContext.LoginInfos.Where(x => x.StudId == getCurriculumRequest.id_number).FirstOrDefault();
+            if (getLoginInfo == null)
+            {
+                //return empty data
+                return new GetCurriculumBEResponse { };
+            }
+            /* 
+             if (getLoginInfo.CurrYear == null)
+                 return new GetCurriculumResponse { };
+            */
+            var getUnits = 0;
+            if (getLoginInfo.AllowedUnits != null)
+            { //getStudent_ornrp.Units 0
+                getUnits = (int)getLoginInfo.AllowedUnits;
+            }
+            var curr_year = 0;
+            if (getLoginInfo.CurrYear != null)
+            {
+                curr_year = (int)getLoginInfo.CurrYear;
+            }
+            var subjects = (from subject in _ucOnlinePortalContext.SubjectInfos
+                            where (subject.CourseCode == getLoginInfo.CourseCode && (subject.CurriculumYear == curr_year || subject.CurriculumYear == getCurriculumRequest.year)) // && subject.CurriculumYear == 
+                            select new GetCurriculumBEResponse.Subjects
+                            {
+                                internal_code = subject.InternalCode,
+                                subject_name = subject.SubjectName,
+                                subject_type = subject.SubjectType,
+                                descr_1 = subject.Descr1,
+                                descr_2 = subject.Descr2,
+                                units = Convert.ToString(subject.Units),
+                                semester = Convert.ToString(subject.Semester),
+                                year_level = Convert.ToInt32(subject.YearLevel), //added convert
+                                course_code = subject.CourseCode,
+                                split_code = subject.SplitCode,
+                                split_type = subject.SplitType
+                            }).ToList();
 
+            var remarks = (from remark in _ucOnlinePortalContext.Requisites
+                           join subject in _ucOnlinePortalContext.SubjectInfos
+                           on remark.RequisiteCode equals subject.InternalCode
+                           join curriculum in _ucOnlinePortalContext.Curricula
+                           on subject.CurriculumYear equals curriculum.Year
+                           where curriculum.IsDeployed == 1
+                           select new GetCurriculumBEResponse.Requisites
+                           {
+                               internal_code = remark.InternalCode,
+                               subject_code = subject.SubjectName,
+                               requisites = remark.RequisiteCode,
+                               requisite_type = remark.RequisiteType
+                           }).ToList();
+
+            var grades = (from subject in _ucOnlinePortalContext.SubjectInfos
+                          join grade in _ucOnlinePortalContext.GradeEvaluations
+                          on subject.InternalCode equals grade.IntCode
+                          where grade.StudId == getCurriculumRequest.id_number
+                          select new GetCurriculumBEResponse.Grades
+                          {
+                              internal_code = grade.IntCode,
+                              eval_id = grade.GradeEvalId,
+                              subject_code = subject.SubjectName,
+                              final_grade = grade.FinalGrade
+                          }).ToList();
+
+            var schedules = (from schedule in _ucOnlinePortalContext.Schedules
+                             join subject_info in _ucOnlinePortalContext.SubjectInfos
+                             on schedule.InternalCode equals subject_info.InternalCode
+                             join curriculum in _ucOnlinePortalContext.Curricula
+                             on subject_info.CurriculumYear equals curriculum.Year
+                             where (curriculum.IsDeployed == 1 && schedule.ActiveTerm == getCurriculumRequest.term)
+                             select new GetCurriculumBEResponse.Schedules
+                             {
+                                 internal_code = schedule.InternalCode,
+                                 edp_code = schedule.EdpCode,
+                                 subject_code = schedule.Description,
+                                 subject_type = schedule.SubType,
+                                 time_start = schedule.TimeStart,
+                                 time_end = schedule.TimeEnd,
+                                 mdn = schedule.Mdn,
+                                 days = schedule.Days,
+                                 split_type = schedule.SplitType,
+                                 split_code = schedule.SplitCode,
+                                 course_code = schedule.CourseCode,
+                                 section = schedule.Section,
+                                 room = schedule.Room
+                             }).ToList();
+
+            //var subjects = getStudentCourse.CourseCode;
+            return new GetCurriculumBEResponse { success = 1, dept = getLoginInfo.Dept, subjects = subjects, requisites = remarks, grades = grades, schedules = schedules, units = getUnits, curr_year = curr_year };
+        }
         public StudentSubjectResponse RequestSubject(StudentSubjectRequest studentRequest)  //id_number
         {
             if (studentRequest == null)
@@ -8649,7 +8745,7 @@ namespace UCPortal.BusinessLogic.Enrollment
                                 on subjectInfo.CurriculumYear equals curr.Year
                                 join course in _ucOnlinePortalContext.CourseLists
                                 on subjectInfo.CourseCode equals course.CourseCode
-                                where (curr.IsDeployed == 1 && (subjectInfo.Descr1.Contains(getEquivalenceRequest.description) || subjectInfo.Descr2.Contains(getEquivalenceRequest.description)))
+                                where (curr.IsDeployed == 1 && (subjectInfo.Descr1.Contains(getEquivalenceRequest.description) || subjectInfo.Descr2.Contains(getEquivalenceRequest.description)) && subjectInfo.InternalCode != getEquivalenceRequest.internal_code)
                                 select new GetEquivalenceResponse.Equivalence
                                 {
                                     internal_code = subjectInfo.InternalCode,
@@ -8665,8 +8761,40 @@ namespace UCPortal.BusinessLogic.Enrollment
                                     curr_year = (int)subjectInfo.CurriculumYear,
                                     course = course.CourseAbbr
                                 }).ToList();
-
-            //var temp = equivalences.
+            /*if (!getEquivalenceRequest.internal_code.Equals(String.Empty))
+            {
+                equivalences = (from equival in _ucOnlinePortalContext.Equivalences
+                                    join subjectInfo in _ucOnlinePortalContext.SubjectInfos
+                                    on equival.EquivalCode equals subjectInfo.InternalCode
+                                    join course in _ucOnlinePortalContext.CourseLists
+                                    on subjectInfo.CourseCode equals course.CourseCode
+                                    where equival.InternalCode == getEquivalenceRequest.internal_code
+                                    select new GetEquivalenceResponse.Equivalence
+                                    {
+                                        internal_code = subjectInfo.InternalCode,
+                                        subject = subjectInfo.SubjectName,
+                                        descr_1 = subjectInfo.Descr1,
+                                        desc_2 = subjectInfo.Descr2,
+                                        subject_type = subjectInfo.SubjectType,
+                                        units = subjectInfo.Units,
+                                        split_code = subjectInfo.SplitCode,
+                                        split_type = subjectInfo.SplitType,
+                                        semester = (short)subjectInfo.Semester,
+                                        year = (short)subjectInfo.YearLevel,
+                                        curr_year = (int)subjectInfo.CurriculumYear,
+                                        course = course.CourseAbbr
+                                    }).ToList();
+            }
+            else if (!getEquivalenceRequest.subject_name.Equals(String.Empty))
+            {
+                equivalences = equivalences.Where(x => x.subject.Contains(getEquivalenceRequest.subject_name)).ToList();
+            }
+            else
+            {
+                equivalences = equivalences.Where(x => x.descr_1.Contains(getEquivalenceRequest.description) || x.desc_2.Contains(getEquivalenceRequest.description)).ToList();
+                //&& (subjectInfo.Descr1.Contains(getEquivalenceRequest.description) || subjectInfo.Descr2.Contains(getEquivalenceRequest.description))
+            }
+            //var temp = equivalences.*/
 
             return new GetEquivalenceResponse { equivalences = equivalences };
         }
@@ -8889,6 +9017,8 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             if (status == 3)
             {
+
+
                 var getSubjectInfo = _ucOnlinePortalContext.SubjectInfos.Where(x => x.InternalCode == getRequest.internal_code).FirstOrDefault();
                 Schedule sched = new Schedule
                 {
@@ -8914,13 +9044,28 @@ namespace UCPortal.BusinessLogic.Enrollment
                     Room = "ONLINE",
                     Instructor2 = "",
                     Deployed = 1,
-                    Status = 1,
+                    Status = 4,
                     SplitType = "",
                     SplitCode = "",
-                    //IsGened = 0,
+                    IsGened = 0,
                     ActiveTerm = getRequest.term
                 };
                 _ucOnlinePortalContext.Schedules.Add(sched);
+
+                var students = _ucOnlinePortalContext.StudentRequests.Where(x => x.InternalCode == getRequest.internal_code).ToList();
+                foreach (StudentRequest studentRequest in students) {
+
+                    Notification newNotification = new Notification
+                    {
+                        StudId = studentRequest.StudId,
+                        Dte = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
+                        Message = "Notice:  Your Request "+getSubjectInfo.SubjectName+" has already been approved. EDP Code ("+edpcode+")",
+                        NotifRead = 0,
+                        ActiveTerm = getRequest.term
+                    };
+
+                    _ucOnlinePortalContext.Notifications.Add(newNotification);
+                }
 
             }
             //Insert to table
@@ -8933,39 +9078,50 @@ namespace UCPortal.BusinessLogic.Enrollment
 
         public GetStudentGradesResponse GetStudentGrades(GetStudentGradesRequest getStudentGrades)
         {
-            if (getStudentGrades.id_number == null || getStudentGrades.internal_code == null)
+            if (getStudentGrades.id_number == null)
                 return new GetStudentGradesResponse { };
 
             
             //var checkIfExist = _ucOnlinePortalContext.GradeEvaluations.Where(x=> x.IntCode == getStudentGrades.internal_code && getStudentGrades.id_number == x.StudId).FirstOrDefault();
 
 
-            var grades = (from grade_evaluation in _ucOnlinePortalContext.GradeEvaluations
-                      where (getStudentGrades.internal_code == grade_evaluation.IntCode && getStudentGrades.id_number == grade_evaluation.StudId)
-                      select new GetStudentGradesResponse.Grades
-                      {
-                          id_number = grade_evaluation.StudId,
-                          internal_code = grade_evaluation.IntCode,
-                          mid_grade = grade_evaluation.MidtermGrade,
-                          final_grade = grade_evaluation.FinalGrade,
-                      }).ToList();
+            var grades = (from subject in _ucOnlinePortalContext.SubjectInfos
+                              join grade in _ucOnlinePortalContext.GradeEvaluations
+                              on subject.InternalCode equals grade.IntCode
+                              where grade.StudId == getStudentGrades.id_number
+                              select new GetStudentGradesResponse.Grades
+                              {
+                                  internal_code = grade.IntCode,
+                                  eval_id = grade.GradeEvalId,
+                                  subject_code = subject.SubjectName,
+                                  final_grade = grade.FinalGrade
+                              }).ToList();
+ 
 
-
-            var equivalence = (from equivalences in _ucOnlinePortalContext.Equivalences
-                               join grade_evaluation in _ucOnlinePortalContext.GradeEvaluations
-                               on equivalences.EquivalCode equals grade_evaluation.IntCode
-                               where equivalences.InternalCode == getStudentGrades.internal_code
-                               select new GetStudentGradesResponse.Equivalence
-                               {
-                                   internal_code = equivalences.InternalCode,
-                                   equival_code = equivalences.EquivalCode,
-                                   mid_grade = grade_evaluation.MidtermGrade,
-                                   final_grade = grade_evaluation.FinalGrade
-                               }).ToList();
-
-            return new GetStudentGradesResponse { grades = grades , equivalence = equivalence};
+            return new GetStudentGradesResponse { grades = grades};
         }
+        public GetStudentGradesBEResponse GetStudentGradesBE(GetStudentGradesBERequest getStudentGrades)
+        {
+            if (getStudentGrades.id_number == null)
+                return new GetStudentGradesBEResponse { };
 
+
+            //var checkIfExist = _ucOnlinePortalContext.GradeEvaluations.Where(x=> x.IntCode == getStudentGrades.internal_code && getStudentGrades.id_number == x.StudId).FirstOrDefault();
+
+
+            var grades = (from grade_evaluation in _ucOnlinePortalContext.GradeEvaluations
+                          where (getStudentGrades.id_number == grade_evaluation.StudId)
+                          select new GetStudentGradesBEResponse.Grades
+                          {
+                              id_number = grade_evaluation.StudId,
+                              internal_code = grade_evaluation.IntCode,
+                              mid_grade = grade_evaluation.MidtermGrade,
+                              final_grade = grade_evaluation.FinalGrade,
+                          }).ToList();
+
+
+            return new GetStudentGradesBEResponse { grades = grades };
+        }
         public SetGradeEvaluationResponse SetGradeEvaluation(SetGradeEvaluationRequest setGradeEvaluation)
         {
             GradeEvaluation grade_evaluation = new GradeEvaluation
@@ -8990,5 +9146,6 @@ namespace UCPortal.BusinessLogic.Enrollment
 
             return new SetStatusEvaluationResponse { success = 1 };
         }
+
     }    
 }

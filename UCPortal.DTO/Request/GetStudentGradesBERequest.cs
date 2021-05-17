@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UCPortal.DTO.Request
 {
-    public class GetStudentGradesRequest
+    public class GetStudentGradesBERequest
     {
         public string id_number { get; set; }
     }

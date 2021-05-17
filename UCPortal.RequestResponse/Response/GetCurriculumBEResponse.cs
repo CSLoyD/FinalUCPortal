@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UCPortal.DTO.Response
+namespace UCPortal.RequestResponse.Response
 {
-    public class GetCurriculumResponse
+    public class GetCurriculumBEResponse
     {
         public int success { get; set; }
         public string course_code { get; set; }

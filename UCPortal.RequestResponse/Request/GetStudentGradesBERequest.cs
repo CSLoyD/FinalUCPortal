@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UCPortal.DTO.Request
+namespace UCPortal.RequestResponse.Request
 {
-    public class GetStudentGradesRequest
+    public class GetStudentGradesBERequest
     {
         public string id_number { get; set; }
     }

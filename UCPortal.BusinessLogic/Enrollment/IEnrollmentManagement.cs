@@ -106,7 +106,9 @@ namespace UCPortal.BusinessLogic.Enrollment
         GetStudentListResponse GetStudentList(GetStudentListRequest getRequest);
         UpdateRequestScheduleStatusResponse UpdateRequestStatus(UpdateRequestScheduleStatusRequest getRequest);
         GetStudentGradesResponse GetStudentGrades(GetStudentGradesRequest getStudentGrades);
+        GetStudentGradesBEResponse GetStudentGradesBE(GetStudentGradesBERequest getStudentGrades);
         SetGradeEvaluationResponse SetGradeEvaluation(SetGradeEvaluationRequest setGradeEvaluation);
         SetStatusEvaluationResponse SetStatusEvaluation(SetStatusEvaluationRequest setStatusEvaluation);
+        GetCurriculumBEResponse GetCurriculumBE(GetCurriculumBERequest getCurriculumRequest);
     }
 }

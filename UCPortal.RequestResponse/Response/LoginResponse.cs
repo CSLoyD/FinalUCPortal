@@ -21,6 +21,7 @@ namespace UCPortal.RequestResponse.Response
         public string has_active_term { get; set; }
         public int curr_year { get; set; }
         public int allowed_units { get; set; }
+        public string dept { get; set; }
         public class StudentInfo
         {
             public string fullname { get; set; }
