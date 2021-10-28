@@ -23,7 +23,7 @@ namespace UCPortal.Controllers
         public LoginController(ILoginManagement loginManagement, IJwtAuthenticationManager jwtAuthenticationManager)
         {
             _loginManagement = loginManagement;
-            _jwtAuthenticationManager = jwtAuthenticationManager;
+            _jwtAuthenticationManager = jwtAuthenticationManager
         }
         
         /*W
